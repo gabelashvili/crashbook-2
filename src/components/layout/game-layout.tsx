@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { AnimationContext } from '../context/animation';
 import { OpenContext } from '../context/open';
 import { TurnContext } from '../context/turn';
@@ -48,11 +48,12 @@ const GameLayout = () => {
           show open
         </button>
         <button
-          onClick={() => {
-            turnContext.show();
+          onClick={async () => {
+            await turnContext.show();
+            console.log('turn complete');
           }}
         >
-          show open
+          show turn
         </button>
       </div>
     </div>
