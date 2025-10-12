@@ -1,0 +1,13 @@
+skeleton.png
+size:2048,4096
+filter:Linear,Linear
+book cover
+bounds:2,2,974,1315
+book cover 03
+bounds:2,1319,974,1315
+inner book copy
+bounds:2,2636,1904,1317
+left page
+bounds:978,68,867,1282
+right page
+bounds:978,1352,873,1282

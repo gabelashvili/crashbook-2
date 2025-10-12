@@ -2,9 +2,15 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App.tsx';
+import { AnimationContextProvider } from './components/context/animation.tsx';
+import { BookOpenContextProvider } from './components/context/book-open.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <AnimationContextProvider>
+      <BookOpenContextProvider>
+        <App />
+      </BookOpenContextProvider>
+    </AnimationContextProvider>
   </StrictMode>,
 );

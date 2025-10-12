@@ -10,7 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@esotericsoftware/spine-pixi-v8": "^4.2.93",
+    "@pixi-spine/runtime-4.1": "^4.0.6",
     "@tailwindcss/vite": "^4.1.14",
+    "pixi.js": "^8.14.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "tailwindcss": "^4.1.14"
