@@ -5,7 +5,7 @@ import type { Spine } from '@esotericsoftware/spine-pixi-v8';
 import { createContext, useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 
 type AnimationContextProps = {
-  spines: { open: Spine | null };
+  spines: { open: Spine | null; turn: Spine | null };
   setContainer: (containerRef: HTMLDivElement) => void;
   loading: boolean;
   application: PIXI.Application | null;
@@ -14,10 +14,10 @@ type AnimationContextProps = {
   setCurrentAnimation: (animation: (typeof spinesList)[number]) => void;
 };
 
-const spinesList = ['open'] as const;
+const spinesList = ['open', 'turn'] as const;
 
 const AnimationContext = createContext<AnimationContextProps>({
-  spines: { open: null },
+  spines: { open: null, turn: null },
   setContainer: () => {},
   loading: true,
   application: null,
@@ -57,10 +57,9 @@ const updateSpineSizes = (spines: Spine[], container: HTMLElement) => {
 // Context Provider
 const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
-  const spinesRef = useRef<{ open: Spine | null }>({ open: null });
+  const spinesRef = useRef<AnimationContextProps['spines']>({ open: null, turn: null });
   const [applicationRef, setApplicationRef] = useState<PIXI.Application | null>(null);
   const currentAnimation = useRef<(typeof spinesList)[number] | null>('open');
-  // const containerRef = useRef<HTMLDivElement | null>(null);
 
   const loadSpinesAssets = useCallback(async () => {
     const loadedAssets = await PIXI.Assets.load(

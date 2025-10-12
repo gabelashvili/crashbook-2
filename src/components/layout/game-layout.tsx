@@ -1,10 +1,12 @@
 import { useContext, useState } from 'react';
 import { AnimationContext } from '../context/animation';
-import { BookOpenContext } from '../context/book-open';
+import { OpenContext } from '../context/open';
+import { TurnContext } from '../context/turn';
 
 const GameLayout = () => {
   const animationContext = useContext(AnimationContext);
-  const bookOpenContext = useContext(BookOpenContext);
+  const bookOpenContext = useContext(OpenContext);
+  const turnContext = useContext(TurnContext);
   return (
     <div className="grid grid-rows-[1fr_minmax(0,_min-content)]  py-6 max-w-2xl aspect-[1/1.5] max-h-[780px] w-full m-auto px-2">
       <div className="relative w-full h-full flex flex-col overflow-hidden ">
@@ -41,6 +43,13 @@ const GameLayout = () => {
         <button
           onClick={() => {
             bookOpenContext.show({ duration: 1 });
+          }}
+        >
+          show open
+        </button>
+        <button
+          onClick={() => {
+            turnContext.show();
           }}
         >
           show open
