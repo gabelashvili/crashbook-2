@@ -2,11 +2,13 @@ import { useContext } from 'react';
 import { AnimationContext } from '../context/animation';
 import { OpenContext } from '../context/open';
 import { TurnContext } from '../context/turn';
+import { FormulaContext } from '../context/formula';
 
 const GameLayout = () => {
   const animationContext = useContext(AnimationContext);
   const bookOpenContext = useContext(OpenContext);
   const turnContext = useContext(TurnContext);
+  const formulaContext = useContext(FormulaContext);
   return (
     <div className="grid grid-rows-[1fr_minmax(0,_min-content)]  py-6 max-w-2xl aspect-[1/1.5] max-h-[780px] w-full m-auto px-2">
       <div className="relative w-full h-full flex flex-col overflow-hidden ">
@@ -54,6 +56,18 @@ const GameLayout = () => {
           }}
         >
           show turn
+        </button>
+        <button
+          onClick={() => {
+            formulaContext.show(['1', '3', '4'], {
+              durationSec: 5,
+              onFinish: () => {
+                console.log('formula complete');
+              },
+            });
+          }}
+        >
+          show formula
         </button>
       </div>
     </div>

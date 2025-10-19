@@ -3,6 +3,9 @@ import * as PIXI from 'pixi.js';
 import * as spine from '@esotericsoftware/spine-pixi-v8';
 import type { Spine } from '@esotericsoftware/spine-pixi-v8';
 import { createContext, useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
+import { Assets } from 'pixi.js';
+import type { GifSource } from 'pixi.js/gif';
+import { GifSprite } from 'pixi.js/gif';
 
 type AnimationContextProps = {
   spines: { open: Spine | null; turn: Spine | null };
@@ -12,9 +15,28 @@ type AnimationContextProps = {
   hideAllSpines: () => void;
   currentAnimation: (typeof spinesList)[number] | null;
   setCurrentAnimation: (animation: (typeof spinesList)[number]) => void;
+  containerOptions: { width: number; height: number; scaleX: number; scaleY: number };
 };
 
 const spinesList = ['open', 'turn'] as const;
+const gifsList = [
+  '0',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  'divide',
+  'close-bracket',
+  'open-bracket',
+  'minus',
+  'plus',
+  'multiply',
+] as const;
 
 const AnimationContext = createContext<AnimationContextProps>({
   spines: { open: null, turn: null },
@@ -24,6 +46,7 @@ const AnimationContext = createContext<AnimationContextProps>({
   hideAllSpines: () => {},
   currentAnimation: null,
   setCurrentAnimation: () => {},
+  containerOptions: { width: 0, height: 0, scaleX: 0, scaleY: 0 },
 });
 
 // Get real container sizes
@@ -44,14 +67,15 @@ const updateSpineSizes = (spines: Spine[], container: HTMLElement) => {
   const { width, height } = getContainerSizes(container);
   const defaultSkeletonDataWidth = spines[0].skeleton.data.width;
   const defaultSkeletonDataHeight = spines[0].skeleton.data.height;
-  console.log(width, height);
+  const scaleX = (width / defaultSkeletonDataWidth) * 0.99;
+  const scaleY = height / defaultSkeletonDataHeight;
   spines.forEach((spine) => {
-    const scaleX = (width / defaultSkeletonDataWidth) * 0.99;
-    const scaleY = height / defaultSkeletonDataHeight;
     spine.scale.set(scaleX, scaleY);
     spine.x = width / 2;
     spine.y = height / 2;
   });
+
+  return { scaleX, scaleY, width, height };
 };
 
 // Context Provider
@@ -60,6 +84,12 @@ const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
   const spinesRef = useRef<AnimationContextProps['spines']>({ open: null, turn: null });
   const [applicationRef, setApplicationRef] = useState<PIXI.Application | null>(null);
   const currentAnimation = useRef<(typeof spinesList)[number] | null>('open');
+  const containerOptionsRef = useRef<AnimationContextProps['containerOptions']>({
+    width: 0,
+    height: 0,
+    scaleX: 0,
+    scaleY: 0,
+  });
 
   const loadSpinesAssets = useCallback(async () => {
     const loadedAssets = await PIXI.Assets.load(
@@ -70,6 +100,18 @@ const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
         ])
         .flat(),
     );
+
+    const loadedGifs = await Promise.all(
+      gifsList.map((gif) =>
+        Assets.load<GifSource>({
+          src: `/gifs/${gif}.gif`,
+          alias: `gif-${gif}`,
+        }),
+      ),
+    );
+    loadedGifs.forEach((gif) => {
+      // new GifSprite(gif);`
+    });
 
     Object.values(loadedAssets).forEach((asset: any) => {
       if (asset?.pages?.[0]?.texture) {
@@ -114,7 +156,7 @@ const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
   const onResize = useCallback(() => {
     if (!applicationRef || !applicationRef.canvas.parentElement?.parentElement) return;
     resizeApplication(applicationRef, applicationRef.canvas.parentElement.parentElement);
-    updateSpineSizes(
+    containerOptionsRef.current = updateSpineSizes(
       Object.values(spinesRef.current).filter((spine) => spine !== null),
       applicationRef.canvas.parentElement.parentElement,
     );
@@ -161,6 +203,7 @@ const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
         hideAllSpines,
         currentAnimation: currentAnimation.current,
         setCurrentAnimation,
+        containerOptions: containerOptionsRef.current,
       }}
     >
       {loading ? <div>Loading...</div> : children}
