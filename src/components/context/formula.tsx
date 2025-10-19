@@ -1,4 +1,4 @@
-import { createContext, use, useEffect, type ReactNode } from 'react';
+import { createContext, use, type ReactNode } from 'react';
 import { AnimationContext } from './animation';
 import * as PIXI from 'pixi.js';
 
@@ -41,6 +41,7 @@ const FormulaContextProvider = ({ children }: { children: ReactNode }) => {
 
   const show: FormulaContextProps['show'] = (formula, options) => {
     if (!animationContext.application) return;
+    animationContext.spines.turn!.addChild(rect);
 
     const SPACE_BETWEEN_SPRITES = 50;
     rect.removeChildren();
@@ -120,16 +121,16 @@ const FormulaContextProvider = ({ children }: { children: ReactNode }) => {
     playNext();
   };
 
-  useEffect(() => {
-    if (animationContext.spines.turn) {
-      animationContext.spines.turn.addChild(rect);
-    }
-    return () => {
-      if (animationContext.spines.turn) {
-        animationContext.spines.turn.removeChild(rect);
-      }
-    };
-  }, [animationContext.spines.turn]);
+  // useEffect(() => {
+  //   if (animationContext.spines.turn) {
+  //     animationContext.spines.turn.addChild(rect);
+  //   }
+  //   return () => {
+  //     if (animationContext.spines.turn) {
+  //       animationContext.spines.turn.removeChild(rect);
+  //     }
+  //   };
+  // }, [animationContext.spines.turn]);
 
   return <FormulaContext.Provider value={{ show }}>{children}</FormulaContext.Provider>;
 };

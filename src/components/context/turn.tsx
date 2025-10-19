@@ -26,6 +26,7 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
 
   const show = (duration = initialDuration): Promise<void> => {
     return new Promise((resolve) => {
+      spine.removeChildren();
       animationContext.hideAllSpines();
       spine.visible = true;
       setIsTurning(true);
