@@ -1,4 +1,4 @@
-import { createContext, use, useCallback, useEffect, useRef, type ReactNode } from 'react';
+import { createContext, use, useEffect, type ReactNode } from 'react';
 import { AnimationContext } from './animation';
 import * as PIXI from 'pixi.js';
 
@@ -18,113 +18,120 @@ type FormulaKey =
   | 'open-bracket'
   | 'minus'
   | 'plus'
-  | 'multiply';
+  | 'multiply'
+  | 'equal';
 
-// Define the shape of your context
 type FormulaContextProps = {
   show: (formula: FormulaKey[], options?: { durationSec?: number; onFinish?: () => void }) => void;
 };
 
-// Create the context with a default value (can be null)
 const FormulaContext = createContext<FormulaContextProps>({
   show: () => Promise.resolve(),
 });
 
-const container = new PIXI.Container();
+// Rectangle where GIFs are displayed
+const rect = new PIXI.Graphics();
+rect.rect(90, -50, 700, 150);
+const leftSideRectGrapgicsRgba = new PIXI.Color({ r: 255, g: 0, b: 0, a: 0 });
+rect.fill(leftSideRectGrapgicsRgba);
+rect.visible = true;
 
-// Context Provider
 const FormulaContextProvider = ({ children }: { children: ReactNode }) => {
   const animationContext = use(AnimationContext);
 
   const show: FormulaContextProps['show'] = (formula, options) => {
     if (!animationContext.application) return;
-    const MAX_WIDTH = (animationContext.application.screen.width / 2) * 0.6;
-    const SPACE_BETWEEN_SPRITES = 20;
 
-    container.removeChildren();
+    const SPACE_BETWEEN_SPRITES = 50;
+    rect.removeChildren();
+
     const animationSprites: PIXI.AnimatedSprite[] = [];
     formula.forEach((key) => {
       const gif = PIXI.Assets.get(`gif-${key}`);
       if (gif) {
         const sprite = new PIXI.AnimatedSprite(gif.textures);
         sprite.visible = false;
-        animationSprites.push(sprite);
         sprite.gotoAndStop(0);
+        animationSprites.push(sprite);
       }
     });
-    const totalDurationSec = animationSprites.reduce((acc, sprite) => {
-      return acc + sprite.totalFrames / (sprite.animationSpeed * 60);
-    }, 0);
-    const timeScale = totalDurationSec / (options?.durationSec ?? 1);
 
-    const totalWidth = animationSprites.reduce((acc, sprite, spriteIndex) => {
-      return (
-        acc +
-        sprite.width +
-        (spriteIndex > 0 && spriteIndex !== animationSprites.length - 1 ? SPACE_BETWEEN_SPRITES : 0)
-      );
+    rect.addChild(...animationSprites);
+
+    const totalDuration = animationSprites.reduce((acc, sprite) => {
+      return acc + sprite.totalFrames * (sprite.animationSpeed / 60);
     }, 0);
-    const scale = Math.min(MAX_WIDTH / totalWidth, 0.4);
-    const maxHeight = animationSprites.reduce((acc, sprite) => {
-      return Math.max(acc, sprite.height * scale);
+    // Calculate total width of sprites including spacing
+    const totalWidthRaw = animationSprites.reduce((acc, sprite) => {
+      return acc + sprite.width + SPACE_BETWEEN_SPRITES;
     }, 0);
 
-    container.addChild(...animationSprites);
+    // Determine horizontal scale to fit rect width
+    const scale = Math.min(rect.width / totalWidthRaw, 0.6);
 
+    // Starting X position
+    let prevX = 100 - (totalWidthRaw * scale <= rect.width ? (totalWidthRaw * scale - rect.width) / 2 : 0);
     let playIndex = 0;
-    const startPoint =
-      (animationContext.application!.screen.width + (animationContext.application!.screen.width / 2 - MAX_WIDTH) / 2) /
-      2;
-    const emptySpace = Math.max(MAX_WIDTH - totalWidth * scale, 0);
-    let prevX = startPoint + emptySpace / 2 + 15;
+
+    const maxSpriteHeight = Math.max(...animationSprites.map((sprite) => sprite.height));
 
     const playNext = () => {
       if (playIndex >= animationSprites.length) {
         options?.onFinish?.();
         return;
       }
-      if (playIndex > 0 && playIndex < animationSprites.length) {
-        prevX += SPACE_BETWEEN_SPRITES * scale + animationSprites[playIndex - 1].width;
-      }
-
-      console.log(timeScale);
 
       const sprite = animationSprites[playIndex];
-      sprite.visible = true;
-      sprite.loop = false;
+
+      // Apply horizontal scale
+      sprite.scale.set(scale); // scale X only, keep Y
+
+      // Horizontal position
+      if (playIndex > 0) {
+        const prevSprite = animationSprites[playIndex - 1];
+        prevX += prevSprite.width + SPACE_BETWEEN_SPRITES * scale;
+      }
       sprite.x = prevX;
-      sprite.y = (animationContext.application!.screen.height - maxHeight) / 2;
-      sprite.animationSpeed = timeScale;
-      sprite.scale.set(scale);
+
+      // Vertical centering
+
+      let yPosition = -rect.height / 2 + (maxSpriteHeight * scale) / 2 + 20;
+      if (formula[playIndex] === 'equal') {
+        yPosition += 25;
+      }
+      sprite.y = yPosition;
+
+      const animationSpeed = totalDuration / (options?.durationSec ?? 1);
+      sprite.animationSpeed = animationSpeed;
+      if (animationSpeed > 5) {
+        sprite.gotoAndStop(sprite.totalFrames - 1);
+      }
+      sprite.loop = false;
+      sprite.visible = true;
       sprite.play();
 
-      // When this sprite finishes, play the next one
       sprite.onComplete = () => {
+        sprite.currentFrame = sprite.totalFrames - 1;
         playIndex++;
         playNext();
       };
     };
 
-    // Start the chain
     playNext();
   };
 
   useEffect(() => {
-    animationContext.application!.stage.addChild(container);
+    if (animationContext.spines.turn) {
+      animationContext.spines.turn.addChild(rect);
+    }
     return () => {
-      animationContext.application!.stage.removeChild(container);
+      if (animationContext.spines.turn) {
+        animationContext.spines.turn.removeChild(rect);
+      }
     };
-  }, [animationContext.application]);
+  }, [animationContext.spines.turn]);
 
-  return (
-    <FormulaContext.Provider
-      value={{
-        show,
-      }}
-    >
-      {children}
-    </FormulaContext.Provider>
-  );
+  return <FormulaContext.Provider value={{ show }}>{children}</FormulaContext.Provider>;
 };
 
 export { FormulaContext, FormulaContextProvider };

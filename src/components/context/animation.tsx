@@ -4,8 +4,7 @@ import * as spine from '@esotericsoftware/spine-pixi-v8';
 import type { Spine } from '@esotericsoftware/spine-pixi-v8';
 import { createContext, useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Assets } from 'pixi.js';
-import type { GifSource } from 'pixi.js/gif';
-import { GifSprite } from 'pixi.js/gif';
+import { GifSprite, type GifSource } from 'pixi.js/gif';
 
 type AnimationContextProps = {
   spines: { open: Spine | null; turn: Spine | null };
@@ -15,7 +14,6 @@ type AnimationContextProps = {
   hideAllSpines: () => void;
   currentAnimation: (typeof spinesList)[number] | null;
   setCurrentAnimation: (animation: (typeof spinesList)[number]) => void;
-  containerOptions: { width: number; height: number; scaleX: number; scaleY: number };
 };
 
 const spinesList = ['open', 'turn'] as const;
@@ -36,6 +34,7 @@ const gifsList = [
   'minus',
   'plus',
   'multiply',
+  'equal',
 ] as const;
 
 const AnimationContext = createContext<AnimationContextProps>({
@@ -46,7 +45,6 @@ const AnimationContext = createContext<AnimationContextProps>({
   hideAllSpines: () => {},
   currentAnimation: null,
   setCurrentAnimation: () => {},
-  containerOptions: { width: 0, height: 0, scaleX: 0, scaleY: 0 },
 });
 
 // Get real container sizes
@@ -84,12 +82,6 @@ const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
   const spinesRef = useRef<AnimationContextProps['spines']>({ open: null, turn: null });
   const [applicationRef, setApplicationRef] = useState<PIXI.Application | null>(null);
   const currentAnimation = useRef<(typeof spinesList)[number] | null>('open');
-  const containerOptionsRef = useRef<AnimationContextProps['containerOptions']>({
-    width: 0,
-    height: 0,
-    scaleX: 0,
-    scaleY: 0,
-  });
 
   const loadSpinesAssets = useCallback(async () => {
     const loadedAssets = await PIXI.Assets.load(
@@ -110,7 +102,7 @@ const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
       ),
     );
     loadedGifs.forEach((gif) => {
-      // new GifSprite(gif);`
+      new GifSprite(gif);
     });
 
     Object.values(loadedAssets).forEach((asset: any) => {
@@ -156,7 +148,7 @@ const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
   const onResize = useCallback(() => {
     if (!applicationRef || !applicationRef.canvas.parentElement?.parentElement) return;
     resizeApplication(applicationRef, applicationRef.canvas.parentElement.parentElement);
-    containerOptionsRef.current = updateSpineSizes(
+    updateSpineSizes(
       Object.values(spinesRef.current).filter((spine) => spine !== null),
       applicationRef.canvas.parentElement.parentElement,
     );
@@ -203,7 +195,6 @@ const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
         hideAllSpines,
         currentAnimation: currentAnimation.current,
         setCurrentAnimation,
-        containerOptions: containerOptionsRef.current,
       }}
     >
       {loading ? <div>Loading...</div> : children}

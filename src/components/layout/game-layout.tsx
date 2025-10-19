@@ -59,12 +59,31 @@ const GameLayout = () => {
         </button>
         <button
           onClick={() => {
-            formulaContext.show(['1', '3', '4'], {
-              durationSec: 5,
-              onFinish: () => {
-                console.log('formula complete');
+            formulaContext.show(
+              [
+                'open-bracket',
+                '1',
+                '3',
+                'plus',
+                '2',
+                'close-bracket',
+                'multiply',
+                '4',
+                'minus',
+                '5',
+                'divide',
+                '2',
+                'equal',
+                '1',
+                '4',
+              ],
+              {
+                durationSec: 2,
+                onFinish: () => {
+                  console.log('formula complete');
+                },
               },
-            });
+            );
           }}
         >
           show formula
