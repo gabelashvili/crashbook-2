@@ -6,6 +6,8 @@ import { AnimationContextProvider } from './components/context/animation.tsx';
 import { OpenContextProvider } from './components/context/open.tsx';
 import { TurnContextProvider } from './components/context/turn.tsx';
 import { FormulaContextProvider } from './components/context/formula.tsx';
+import { WinContextProvider } from './components/context/win.tsx';
+import { BurnContextProvider } from './components/context/burn.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -13,7 +15,11 @@ createRoot(document.getElementById('root')!).render(
       <OpenContextProvider>
         <TurnContextProvider>
           <FormulaContextProvider>
-            <App />
+            <WinContextProvider>
+              <BurnContextProvider>
+                <App />
+              </BurnContextProvider>
+            </WinContextProvider>
           </FormulaContextProvider>
         </TurnContextProvider>
       </OpenContextProvider>

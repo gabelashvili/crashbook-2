@@ -3,12 +3,16 @@ import { AnimationContext } from '../context/animation';
 import { OpenContext } from '../context/open';
 import { TurnContext } from '../context/turn';
 import { FormulaContext } from '../context/formula';
+import { WinContext } from '../context/win';
+import { BurnContext } from '../context/burn';
 
 const GameLayout = () => {
   const animationContext = useContext(AnimationContext);
   const bookOpenContext = useContext(OpenContext);
   const turnContext = useContext(TurnContext);
   const formulaContext = useContext(FormulaContext);
+  const winContext = useContext(WinContext);
+  const burnContext = useContext(BurnContext);
   return (
     <div className="grid grid-rows-[1fr_minmax(0,_min-content)]  py-6 max-w-2xl aspect-[1/1.5] max-h-[780px] w-full m-auto px-2">
       <div className="relative w-full h-full flex flex-col overflow-hidden ">
@@ -52,7 +56,6 @@ const GameLayout = () => {
         <button
           onClick={async () => {
             await turnContext.show();
-            console.log('turn complete');
           }}
         >
           show turn
@@ -87,6 +90,20 @@ const GameLayout = () => {
           }}
         >
           show formula
+        </button>
+        <button
+          onClick={() => {
+            winContext.show();
+          }}
+        >
+          show win
+        </button>
+        <button
+          onClick={() => {
+            burnContext.show();
+          }}
+        >
+          show burn
         </button>
       </div>
     </div>

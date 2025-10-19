@@ -3,7 +3,7 @@ import { AnimationContext } from './animation';
 
 // Define the shape of your context
 type TurnContextProps = {
-  show: (duration?: number) => Promise<void>;
+  show: (duration?: number, onFinish?: () => void) => Promise<void>;
   initialDuration: number;
   isTurning: boolean;
 };
@@ -36,11 +36,11 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
 
         animationContext.application!.ticker.remove(tickerFnRef.current!);
         entry.timeScale = initialDuration / duration;
-        console.log(entry.animation?.duration);
-        entry.animationEnd = entry.animation!.duration - 1.3;
+        entry.animationEnd = entry.animation!.duration - 1.2;
 
         entry.listener = {
           complete: () => {
+            console.log('turn complete');
             spine.state.clearTracks();
             spine.update(0);
             setIsTurning(false);

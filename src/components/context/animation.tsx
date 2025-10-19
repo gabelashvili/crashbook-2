@@ -7,7 +7,7 @@ import { Assets } from 'pixi.js';
 import { GifSprite, type GifSource } from 'pixi.js/gif';
 
 type AnimationContextProps = {
-  spines: { open: Spine | null; turn: Spine | null };
+  spines: { open: Spine | null; turn: Spine | null; win: Spine | null; burn: Spine | null };
   setContainer: (containerRef: HTMLDivElement) => void;
   loading: boolean;
   application: PIXI.Application | null;
@@ -16,7 +16,7 @@ type AnimationContextProps = {
   setCurrentAnimation: (animation: (typeof spinesList)[number]) => void;
 };
 
-const spinesList = ['open', 'turn'] as const;
+const spinesList = ['open', 'turn', 'win', 'burn'] as const;
 const gifsList = [
   '0',
   '1',
@@ -38,7 +38,7 @@ const gifsList = [
 ] as const;
 
 const AnimationContext = createContext<AnimationContextProps>({
-  spines: { open: null, turn: null },
+  spines: { open: null, turn: null, win: null, burn: null },
   setContainer: () => {},
   loading: true,
   application: null,
@@ -79,7 +79,12 @@ const updateSpineSizes = (spines: Spine[], container: HTMLElement) => {
 // Context Provider
 const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
-  const spinesRef = useRef<AnimationContextProps['spines']>({ open: null, turn: null });
+  const spinesRef = useRef<AnimationContextProps['spines']>({
+    open: null,
+    turn: null,
+    win: null,
+    burn: null,
+  });
   const [applicationRef, setApplicationRef] = useState<PIXI.Application | null>(null);
   const currentAnimation = useRef<(typeof spinesList)[number] | null>('open');
 
