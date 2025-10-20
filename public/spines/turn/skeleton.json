@@ -55,21 +55,8 @@
           "x":-474
        },
        {
-          "name":"text 01",
-          "parent":"book all",
-          "x":-917.11
-       },
-       {
-          "name":"text 02",
-          "parent":"book all"
-       },
-       {
           "name":"bg",
           "parent":"top"
-       },
-       {
-          "name":"text flow",
-          "parent":"book all"
        },
        {
           "name":"left page2",
@@ -108,15 +95,6 @@
           "attachment":"right page"
        },
        {
-          "name":"text 02",
-          "bone":"text 02"
-       },
-       {
-          "name":"text 01",
-          "bone":"text 01",
-          "attachment":"text 01"
-       },
-       {
           "name":"book cover",
           "bone":"book front page",
           "attachment":"book cover"
@@ -124,22 +102,13 @@
        {
           "name":"book cover2",
           "bone":"book front page2"
-       },
-       {
-          "name":"text flow",
-          "bone":"text flow"
        }
+     
     ],
     "skins":[
        {
           "name":"default",
           "attachments":{
-             "bg":{
-                "bg":{
-                   "width":3000,
-                   "height":3000
-                }
-             },
              "book cover":{
                 "book cover":{
                    "type":"mesh",
@@ -1227,30 +1196,6 @@
                    "width":873,
                    "height":1282
                 }
-             },
-             "text 01":{
-                "text 01":{
-                   "x":18.24,
-                   "y":7.54,
-                   "width":620,
-                   "height":740
-                }
-             },
-             "text 02":{
-                "text 02":{
-                   "x":-40.74,
-                   "y":35.91,
-                   "width":104,
-                   "height":122
-                }
-             },
-             "text flow":{
-                "text flow":{
-                   "x":-140.03,
-                   "y":21.72,
-                   "width":1024,
-                   "height":1058
-                }
              }
           }
        }
@@ -1329,15 +1274,8 @@
                       
                    }
                 ]
-             },
-             "text 01":{
-                "attachment":[
-                   {
-                      
-                   }
-                ]
              }
-          },
+                      },
           "bones":{
              "right page":{
                 "scale":[
@@ -1401,21 +1339,8 @@
                       "x":462
                    }
                 ]
-             },
-             "text flow":{
-                "translate":[
-                   {
-                      "x":-210.34,
-                      "y":8.09
-                   }
-                ],
-                "scale":[
-                   {
-                      "x":0.938,
-                      "y":0.938
-                   }
-                ]
              }
+           
           },
           "attachments":{
              "default":{

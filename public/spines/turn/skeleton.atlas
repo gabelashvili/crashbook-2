@@ -1,29 +1,13 @@
-skeleton.png
-size:4096,4096
+../shared/skeleton.png
+size:2048,4096
 filter:Linear,Linear
-bg
-bounds:0,1058,3000,3000
 book cover
-bounds:3000,2743,974,1315
+bounds:2,2,974,1315
 book cover 03
-bounds:0,84,974,1315
-rotate:90
-left page
-bounds:3000,1461,867,1282
-right page
-bounds:1315,185,873,1282
-rotate:90
-text 02
-bounds:3974,3954,104,122
-rotate:90
-text flow
-bounds:2597,0,1024,1058
-
-skeleton_2.png
-size:2048,2048
-filter:Linear,Linear
+bounds:2,1319,974,1315
 inner book copy
-bounds:0,620,1904,1317
-text 01
-bounds:0,0,620,740
-rotate:90
+bounds:2,2636,1904,1317
+left page
+bounds:978,68,867,1282
+right page
+bounds:978,1352,873,1282
