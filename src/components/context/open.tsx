@@ -21,6 +21,8 @@ const OpenContextProvider = ({ children }: { children: ReactNode }) => {
   const tickerFnRef = useRef<() => void>(() => {});
 
   const show = ({ showIddle, duration = initialDuration }: { showIddle?: boolean; duration?: number }) => {
+    window.stopBurnAnimation?.();
+    window.stopWinAnimation?.();
     animationContext.hideAllSpines();
     spine.visible = true;
     const entry =

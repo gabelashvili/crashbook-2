@@ -101,6 +101,7 @@ const BurnContextProvider = ({ children }: { children: ReactNode }) => {
   const currentAbort = useRef<AbortController | null>(null);
 
   const stopAnimation = useCallback(() => {
+    console.log('stopAnimation', currentAbort.current);
     animationContext.spines.turn!.removeChildren();
     spine.visible = false;
     spine.removeChildren();
@@ -110,6 +111,9 @@ const BurnContextProvider = ({ children }: { children: ReactNode }) => {
 
   const show = (duration = initialDuration, formula: FormulaKey[], potentialWinAmount: string) => {
     // Cancel previous animation if exists
+    if (!animationContext.spines.turn?.visible) {
+      throw new Error('Turn spine is not visible');
+    }
     stopAnimation();
     window.stopWinAnimation?.();
 
