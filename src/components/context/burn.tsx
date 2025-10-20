@@ -110,7 +110,7 @@ const BurnContextProvider = ({ children }: { children: ReactNode }) => {
     spine.removeChildren();
     spine.state.clearTracks();
 
-    const formulaDuration = duration * 0.3;
+    const formulaDuration = duration * 0.25;
     const burnDuration = duration - formulaDuration;
 
     const entry = spine.state.setAnimation(0, 'animation', false);

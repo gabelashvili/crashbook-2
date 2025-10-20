@@ -25,7 +25,7 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
     currentShowId.current += 1;
     const showId = currentShowId.current;
 
-    const formulaDuration = duration * 0.3;
+    const formulaDuration = duration * 0.5;
     const spineDuration = duration - formulaDuration;
     spine.removeChildren();
     spine.visible = true;
