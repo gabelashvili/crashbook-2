@@ -33,8 +33,13 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
 
   const show = (duration: number, formula: FormulaKey[], winAmount: string) => {
     // Cancel any previous animation
+
     currentAbort.current?.abort();
     window.stopBurnAnimation?.();
+
+    if (!animationContext.spines.turn?.visible) {
+      throw new Error('Turn spine is not visible');
+    }
 
     const abortController = new AbortController();
     const { signal } = abortController;
@@ -103,7 +108,7 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
         amountLabel.visible = true;
 
         amountLabel.x = amountLabelStartX + (amountLabelMaxWidth - amountLabel.width) / 2 + 15;
-        amountLabel.y = amountLabelStartY + (amountLabelMaxHeight - amountLabel.height) / 2;
+        amountLabel.y = amountLabelStartY + (amountLabelMaxHeight - amountLabel.height) / 2 + bone!.worldY + 15;
       }
     };
 

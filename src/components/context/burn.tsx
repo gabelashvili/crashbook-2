@@ -111,11 +111,13 @@ const BurnContextProvider = ({ children }: { children: ReactNode }) => {
 
   const show = (duration = initialDuration, formula: FormulaKey[], potentialWinAmount: string) => {
     // Cancel previous animation if exists
+
+    stopAnimation();
+    window.stopWinAnimation?.();
+
     if (!animationContext.spines.turn?.visible) {
       throw new Error('Turn spine is not visible');
     }
-    stopAnimation();
-    window.stopWinAnimation?.();
 
     const abortController = new AbortController();
     const { signal } = abortController;
