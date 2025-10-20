@@ -25,9 +25,9 @@ const showBurnTitle = (spine: PIXI.Container) => {
   const labelColor = new PIXI.Color({ r: 120, g: 67, b: 0, a: 0.9 });
 
   const label = new PIXI.Text({
-    text: 'Potential',
+    text: 'Potential Winning',
     style: {
-      fontSize: 100,
+      fontSize: 68,
       fill: labelColor,
       fontWeight: 'bold',
       letterSpacing: 5,
@@ -54,13 +54,13 @@ const showBurnTitle = (spine: PIXI.Container) => {
   label.scale.set(labelScale);
 
   label.x = startX + (distance - label.width) / 2;
-  label.y = -350;
+  label.y = -200;
 
   label2.x = startX + (distance - label2.width) / 2;
   label2.y = label.y + label2.height;
 
   spine.addChild(label);
-  spine.addChild(label2);
+  // spine.addChild(label2);
 };
 
 const showPotentialWinAmount = (spine: PIXI.Container, amount: string) => {

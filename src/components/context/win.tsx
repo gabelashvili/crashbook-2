@@ -1,6 +1,7 @@
 import { createContext, use, useRef, useCallback, type ReactNode, useEffect } from 'react';
 import { AnimationContext } from './animation';
 import { FormulaContext, type FormulaKey } from './formula';
+import * as PIXI from 'pixi.js';
 
 declare global {
   // Note the capital "W"
@@ -47,6 +48,46 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
 
     const formulaDuration = duration * 0.5;
     const spineDuration = duration - formulaDuration;
+
+    ////
+
+    const slot = spine.skeleton.findSlot('text 01');
+    slot!.bone.worldX = slot!.bone.x;
+
+    const bone = slot?.bone;
+    console.log(bone);
+
+    const labelColor = new PIXI.Color({ r: 120, g: 67, b: 0, a: 0.9 });
+
+    const label = new PIXI.Text({
+      text: 'Current Winning',
+      style: {
+        fontSize: 70,
+        fill: labelColor,
+        fontWeight: 'bold',
+        letterSpacing: 5,
+        fontFamily: 'Lexend-VariableFont_wght',
+      },
+    });
+
+    label.visible = false;
+
+    const tickerFn = () => {
+      const isSlotVisible = slot?.getAttachment() !== null;
+      if (isSlotVisible) {
+        label.visible = true;
+        const labelStartX = bone!.worldX - 350 + 50;
+        const labelEndX = bone!.worldX + 350;
+        const distance = labelEndX - labelStartX;
+        label.x = labelStartX + (distance - label.width) / 2;
+        label.y = bone!.worldY - 250;
+      }
+    };
+
+    animationContext.application!.ticker.add(tickerFn);
+
+    spine.addChild(label);
+    // spine.addChild(label2);
 
     return new Promise<void>((resolve, reject) => {
       // Listen for abort
