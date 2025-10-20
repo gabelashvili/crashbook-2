@@ -11,7 +11,7 @@ declare global {
 }
 
 type WinContextProps = {
-  show: (duration: number, formula: FormulaKey[]) => Promise<void>;
+  show: (duration: number, formula: FormulaKey[], winAmount: string) => Promise<void>;
 };
 
 const WinContext = createContext<WinContextProps>({
@@ -31,7 +31,7 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
     spine.state.clearTracks();
   }, [spine]);
 
-  const show = (duration: number, formula: FormulaKey[]) => {
+  const show = (duration: number, formula: FormulaKey[], winAmount: string) => {
     // Cancel any previous animation
     currentAbort.current?.abort();
     window.stopBurnAnimation?.();
@@ -55,7 +55,6 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
     slot!.bone.worldX = slot!.bone.x;
 
     const bone = slot?.bone;
-    console.log(bone);
 
     const labelColor = new PIXI.Color({ r: 120, g: 67, b: 0, a: 0.9 });
 
@@ -72,22 +71,46 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
 
     label.visible = false;
 
+    const amountLabel = new PIXI.Text({
+      text: winAmount,
+      style: {
+        fontSize: 130,
+        fontWeight: 'bold',
+        fill: new PIXI.Color({ r: 120, g: 67, b: 0, a: 1 }),
+      },
+    });
+
+    amountLabel.visible = false;
+    const amountLabelStartX = bone!.worldX + 260;
+    const amountLabelEndX = bone!.worldX + 680;
+    const amountLabelMaxWidth = amountLabelEndX - amountLabelStartX;
+    const amountLabelScale = Math.min(amountLabelMaxWidth / amountLabel.width, 1);
+    const amountLabelStartY = bone!.worldY + 15;
+    const amountLabelEndY = bone!.worldY + 210;
+    const amountLabelMaxHeight = amountLabelEndY - amountLabelStartY;
+    amountLabel.scale.set(amountLabelScale);
+
     const tickerFn = () => {
       const isSlotVisible = slot?.getAttachment() !== null;
       if (isSlotVisible) {
         label.visible = true;
         const labelStartX = bone!.worldX - 350 + 50;
         const labelEndX = bone!.worldX + 350;
-        const distance = labelEndX - labelStartX;
-        label.x = labelStartX + (distance - label.width) / 2;
+        const labelMaxWidth = labelEndX - labelStartX;
+        label.x = labelStartX + (labelMaxWidth - label.width) / 2;
         label.y = bone!.worldY - 250;
+        //
+        amountLabel.visible = true;
+
+        amountLabel.x = amountLabelStartX + (amountLabelMaxWidth - amountLabel.width) / 2 + 15;
+        amountLabel.y = amountLabelStartY + (amountLabelMaxHeight - amountLabel.height) / 2;
       }
     };
 
     animationContext.application!.ticker.add(tickerFn);
 
     spine.addChild(label);
-    // spine.addChild(label2);
+    spine.addChild(amountLabel);
 
     return new Promise<void>((resolve, reject) => {
       // Listen for abort
@@ -104,6 +127,7 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
           spine.state.clearTracks();
           spine.update(0);
           resolve();
+          animationContext.application!.ticker.remove(tickerFn);
         },
       };
 

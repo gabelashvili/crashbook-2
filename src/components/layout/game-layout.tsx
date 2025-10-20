@@ -97,22 +97,11 @@ const GameLayout = () => {
         </button>
         <button
           onClick={() => {
-            winContext.show(5, [
-              '1',
-              '3',
-              'plus',
-              '2',
-              'close-bracket',
-              'multiply',
-              '4',
-              'minus',
-              '5',
-              'divide',
-              '2',
-              'equal',
-              '1',
-              '4',
-            ]);
+            winContext.show(
+              5,
+              ['1', '3', 'plus', '2', 'close-bracket', 'multiply', '4', 'minus', '5', 'divide', '2', 'equal', '1', '4'],
+              '100.00',
+            );
           }}
         >
           show win
