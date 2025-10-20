@@ -97,67 +97,72 @@ const BurnContextProvider = ({ children }: { children: ReactNode }) => {
   const formulaContext = use(FormulaContext);
   const spine = animationContext.spines.burn!;
   const initialDuration = spine.state.data.skeletonData.findAnimation('animation')!.duration;
-  const currentShowId = useRef<number>(0);
 
-  const show = (duration = initialDuration, formula: FormulaKey[], potentialWinAmount: string) => {
-    currentShowId.current += 1;
-    const showId = currentShowId.current;
+  const currentAbort = useRef<AbortController | null>(null);
 
-    animationContext.spines.win!.visible = false;
+  const stopAnimation = useCallback(() => {
     animationContext.spines.turn!.removeChildren();
-
     spine.visible = false;
     spine.removeChildren();
     spine.state.clearTracks();
+    currentAbort.current?.abort();
+  }, [animationContext.spines.turn, spine]);
+
+  const show = (duration = initialDuration, formula: FormulaKey[], potentialWinAmount: string) => {
+    // Cancel previous animation if exists
+    stopAnimation();
+    window.stopWinAnimation?.();
+
+    const abortController = new AbortController();
+    const { signal } = abortController;
+    currentAbort.current = abortController;
+
+    animationContext.spines.win!.visible = false;
 
     const formulaDuration = duration * 0.25;
     const burnDuration = duration - formulaDuration;
 
     const entry = spine.state.setAnimation(0, 'animation', false);
-
     entry.timeScale = initialDuration / burnDuration;
     entry.animationEnd = entry.animation!.duration - 1.3;
 
-    formulaContext.show(animationContext.spines.turn!, formula, {
-      durationSec: formulaDuration,
-      onFinish: () => {
-        if (showId !== currentShowId.current) return;
+    return new Promise<void>((resolve, reject) => {
+      signal.addEventListener('abort', () => {
+        // stop everything immediately
+        spine.visible = false;
+        spine.removeChildren();
+        spine.state.clearTracks();
+        animationContext.spines.turn!.removeChildren();
+        reject(new DOMException('Animation aborted', 'AbortError'));
+      });
 
-        showBurnTitle(spine);
-        showPotentialWinAmount(animationContext.spines.turn!, potentialWinAmount);
-        spine.visible = true;
+      formulaContext.show(animationContext.spines.turn!, formula, {
+        durationSec: formulaDuration,
+        onFinish: () => {
+          if (signal.aborted) return;
 
-        entry.listener = {
-          complete: () => {
-            spine.state.clearTracks();
-            spine.update(0);
-          },
-        };
-      },
+          showBurnTitle(spine);
+          showPotentialWinAmount(animationContext.spines.turn!, potentialWinAmount);
+          spine.visible = true;
+
+          entry.listener = {
+            complete: () => {
+              if (signal.aborted) return;
+              spine.state.clearTracks();
+              spine.update(0);
+              resolve();
+            },
+          };
+        },
+      });
     });
   };
-
-  const stopAnimation = useCallback(() => {
-    currentShowId.current = -1;
-    animationContext.spines.turn!.removeChildren();
-    spine.visible = false;
-    spine.removeChildren();
-    spine.state.clearTracks();
-  }, [animationContext.spines.turn, spine]);
 
   useEffect(() => {
     window.stopBurnAnimation = stopAnimation;
   }, [stopAnimation]);
 
-  return (
-    <BurnContext.Provider
-      value={{
-        show,
-      }}
-    >
-      {children}
-    </BurnContext.Provider>
-  );
+  return <BurnContext.Provider value={{ show }}>{children}</BurnContext.Provider>;
 };
 
 export { BurnContext, BurnContextProvider };
