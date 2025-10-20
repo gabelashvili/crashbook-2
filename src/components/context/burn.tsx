@@ -1,7 +1,15 @@
-import { createContext, use, type ReactNode } from 'react';
+import { createContext, use, useCallback, useEffect, type ReactNode } from 'react';
 import { AnimationContext } from './animation';
 import { FormulaContext, type FormulaKey } from './formula';
 import * as PIXI from 'pixi.js';
+import { useRef } from 'react';
+
+declare global {
+  // Note the capital "W"
+  interface Window {
+    stopBurnAnimation: () => void;
+  }
+}
 
 // Define the shape of your context
 type BurnContextProps = {
@@ -89,24 +97,35 @@ const BurnContextProvider = ({ children }: { children: ReactNode }) => {
   const formulaContext = use(FormulaContext);
   const spine = animationContext.spines.burn!;
   const initialDuration = spine.state.data.skeletonData.findAnimation('animation')!.duration;
+  const currentShowId = useRef<number>(0);
 
   const show = (duration = initialDuration, formula: FormulaKey[], potentialWinAmount: string) => {
-    spine.removeChildren();
+    currentShowId.current += 1;
+    const showId = currentShowId.current;
+
+    animationContext.spines.win!.visible = false;
+    animationContext.spines.turn!.removeChildren();
+
     spine.visible = false;
+    spine.removeChildren();
+    spine.state.clearTracks();
+
     const formulaDuration = duration * 0.2;
     const burnDuration = duration - formulaDuration;
+
+    const entry = spine.state.setAnimation(0, 'animation', false);
+
+    entry.timeScale = initialDuration / burnDuration;
+    entry.animationEnd = entry.animation!.duration - 1.3;
+
     formulaContext.show(animationContext.spines.turn!, formula, {
       durationSec: formulaDuration,
       onFinish: () => {
-        showBurnTitle(spine);
+        if (showId !== currentShowId.current) return;
 
+        showBurnTitle(spine);
         showPotentialWinAmount(animationContext.spines.turn!, potentialWinAmount);
         spine.visible = true;
-
-        const entry = spine.state.setAnimation(0, 'animation', false);
-
-        entry.timeScale = initialDuration / burnDuration;
-        entry.animationEnd = entry.animation!.duration - 1.3;
 
         entry.listener = {
           complete: () => {
@@ -117,6 +136,18 @@ const BurnContextProvider = ({ children }: { children: ReactNode }) => {
       },
     });
   };
+
+  const stopAnimation = useCallback(() => {
+    currentShowId.current = -1;
+    animationContext.spines.turn!.removeChildren();
+    spine.visible = false;
+    spine.removeChildren();
+    spine.state.clearTracks();
+  }, [animationContext.spines.turn, spine]);
+
+  useEffect(() => {
+    window.stopBurnAnimation = stopAnimation;
+  }, [stopAnimation]);
 
   return (
     <BurnContext.Provider

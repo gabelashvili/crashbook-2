@@ -97,7 +97,22 @@ const GameLayout = () => {
         </button>
         <button
           onClick={() => {
-            winContext.show();
+            winContext.show(1, [
+              '1',
+              '3',
+              'plus',
+              '2',
+              'close-bracket',
+              'multiply',
+              '4',
+              'minus',
+              '5',
+              'divide',
+              '2',
+              'equal',
+              '1',
+              '4',
+            ]);
           }}
         >
           show win
@@ -105,7 +120,7 @@ const GameLayout = () => {
         <button
           onClick={() => {
             burnContext.show(
-              0.1,
+              8,
               ['1', '3', 'plus', '2', 'close-bracket', 'multiply', '4', 'minus', '5', 'divide', '2', 'equal', '1', '4'],
               '356.25',
             );
