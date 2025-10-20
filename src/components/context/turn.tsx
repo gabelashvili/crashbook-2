@@ -30,21 +30,10 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
     spine.visible = true;
     setIsTurning(true);
 
-    const previous = spine.state.tracks[0];
-    if (previous) {
-      previous.timeScale = 5;
-
-      // Wait until previous animation completes
-      await new Promise((resolve) => {
-        previous.listener = {
-          complete: async () => {
-            spine.state.clearTracks();
-            // await new Promise((r) => setTimeout(r, 300)); // optional delay
-            onFinish?.();
-            resolve(null);
-          },
-        };
-      });
+    const previousEntry = spine.state.tracks[0];
+    if (previousEntry) {
+      previousEntry.timeScale = 5;
+      return;
     }
 
     // Now start the new animation
