@@ -55,7 +55,10 @@ const GameLayout = () => {
         </button>
         <button
           onClick={async () => {
-            await turnContext.show();
+            await turnContext.show({
+              duration: 1,
+              onFinish: () => console.log('fin'),
+            });
           }}
         >
           show turn

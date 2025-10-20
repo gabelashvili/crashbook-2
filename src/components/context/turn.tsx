@@ -3,7 +3,7 @@ import { AnimationContext } from './animation';
 
 // Define the shape of your context
 type TurnContextProps = {
-  show: (duration?: number, onFinish?: () => void) => Promise<void>;
+  show: (data: { duration?: number; onFinish?: () => void }) => Promise<void>;
   initialDuration: number;
   isTurning: boolean;
 };
@@ -24,39 +24,40 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isTurning, setIsTurning] = useState(false);
 
-  const show = (duration = initialDuration): Promise<void> => {
-    return new Promise((resolve) => {
-      spine.removeChildren();
-      animationContext.hideAllSpines();
-      spine.visible = true;
-      setIsTurning(true);
+  const show = async ({ duration = initialDuration, onFinish }: { duration?: number; onFinish?: () => void }) => {
+    spine.removeChildren();
+    animationContext.hideAllSpines();
+    spine.visible = true;
+    setIsTurning(true);
 
-      const proceed = async () => {
-        const entry = spine.state.setAnimation(0, 'animation', false);
+    const previous = spine.state.tracks[0];
+    if (previous) {
+      previous.timeScale = 5;
 
-        animationContext.application!.ticker.remove(tickerFnRef.current!);
-        entry.timeScale = initialDuration / duration;
-        entry.animationEnd = entry.animation!.duration - 1.2;
-
-        entry.listener = {
-          complete: () => {
-            console.log('turn complete');
+      // Wait until previous animation completes
+      await new Promise((resolve) => {
+        previous.listener = {
+          complete: async () => {
             spine.state.clearTracks();
-            spine.update(0);
-            setIsTurning(false);
-            resolve();
+            // await new Promise((r) => setTimeout(r, 300)); // optional delay
+            onFinish?.();
+            resolve(null);
           },
         };
-      };
+      });
+    }
 
-      if (spine.state.tracks[0]) {
-        spine.state.tracks[0].trackTime = 100;
-        spine.update(0);
-        timerRef.current = setTimeout(proceed, 0); // wait 0ms, then continue
-      } else {
-        proceed();
-      }
-    });
+    // Now start the new animation
+    const entry = spine.state.setAnimation(0, 'animation', false);
+    animationContext.application!.ticker.remove(tickerFnRef.current!);
+    entry.timeScale = initialDuration / duration;
+    entry.animationEnd = entry.animation!.duration - 1.2;
+    entry.listener = {
+      complete: () => {
+        onFinish?.();
+        spine.state.clearTracks();
+      },
+    };
   };
 
   useEffect(() => {
