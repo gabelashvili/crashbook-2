@@ -110,6 +110,11 @@ const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
       new GifSprite(gif);
     });
 
+    const font = new FontFace('Lexend-VariableFont_wght', 'url(/fonts/Lexend-VariableFont_wght.ttf)');
+    await font.load();
+    document.fonts.add(font);
+    await document.fonts.ready;
+
     Object.values(loadedAssets).forEach((asset: any) => {
       if (asset?.pages?.[0]?.texture) {
         asset.pages[0].texture.setFilters(

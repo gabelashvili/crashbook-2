@@ -18,6 +18,7 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
   const initialDuration = spine.state.data.skeletonData.findAnimation('animation')!.duration;
 
   const show = (duration = initialDuration) => {
+    spine.removeChildren();
     spine.visible = true;
     const entry = spine.state.setAnimation(0, 'animation', false);
     entry.timeScale = initialDuration / duration;

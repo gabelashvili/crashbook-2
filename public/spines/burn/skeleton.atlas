@@ -6,7 +6,7 @@ bounds:1074,609,434,122
 45X3
 bounds:3440,1186,462,122
 black 03
-bounds:740,368,334,363
+bounds:740,348,334,363
 damage paper
 bounds:1904,0,1024,1024
 drops
@@ -16,7 +16,7 @@ bounds:2928,626,443,398
 splash line
 bounds:1904,1024,1536,1024
 text 01
-bounds:3440,1308,620,740
+bounds:3440,1290,620,740
 text 01_a
 bounds:0,111,620,740
 rotate:90
