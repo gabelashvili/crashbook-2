@@ -20,8 +20,7 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
   const show = (duration = initialDuration) => {
     spine.visible = true;
     const entry = spine.state.setAnimation(0, 'animation', false);
-    entry.timeScale = 10;
-    // entry.timeScale = initialDuration / duration;
+    entry.timeScale = initialDuration / duration;
     entry.animationEnd = entry.animation!.duration - 1.3;
 
     entry.listener = {
