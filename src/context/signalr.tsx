@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
-import type { TypedHubConnection } from '../types/hub-events';
+import type { TypedHubConnection } from '../types/hub';
 import { createGameHubConnection } from '../utils/signalr';
 
 export interface SignalRContextType {

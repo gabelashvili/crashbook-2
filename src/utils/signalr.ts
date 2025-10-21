@@ -1,5 +1,5 @@
 import { HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
-import type { TypedHubConnection } from '../types/hub-events';
+import type { TypedHubConnection } from '../types/hub';
 
 export const createGameHubConnection = (playerId: string, providerId: string): TypedHubConnection =>
   new HubConnectionBuilder()
