@@ -32,6 +32,7 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
   const infoModalContext = use(InfoModalContext);
   const [status, setStatus] = useState<'connecting' | 'connected' | 'reconnecting' | 'disconnected'>('connecting');
   const connection = useRef<TypedHubConnection | null>(null);
+  const lastPageTurnTime = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Temp solution when user not found error is thrown, we don't want to show the modal again on disconnect
   const userNotFoundError = useRef(false);
@@ -39,6 +40,15 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
   const searchParams = new URLSearchParams(window.location.search);
   const providerId = searchParams.get('providerId');
   const playerId = searchParams.get('playerId');
+  const isAutoPlay = false;
+
+  const hideLoader = () => {
+    if (lastPageTurnTime.current) {
+      console.log('hide loader');
+      clearTimeout(lastPageTurnTime.current);
+      lastPageTurnTime.current = null;
+    }
+  };
 
   const createConnection = useCallback(async () => {
     if (!playerId || !providerId) {
@@ -49,6 +59,32 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
 
     try {
       connection.current = createGameHubConnection(playerId, providerId);
+
+      const originalInvoke: typeof connection.current.invoke = connection.current.invoke.bind(connection.current);
+
+      connection.current.invoke = async (
+        ...args: Parameters<typeof originalInvoke>
+      ): ReturnType<typeof originalInvoke> => {
+        const [methodName, ...rest] = args;
+        console.log(`[SignalR Invoke] → ${methodName}`, ...rest);
+
+        if (methodName === 'TurnThePage') {
+          lastPageTurnTime.current = setTimeout(() => {
+            console.log('show loader');
+          }, 700);
+        }
+
+        if (methodName === 'CreateGame') {
+          lastPageTurnTime.current = setTimeout(
+            () => {
+              console.log('show loader');
+            },
+            isAutoPlay ? 700 : gameContext.state.defaultOpenTime + 700,
+          );
+        }
+
+        return originalInvoke(...args);
+      };
 
       connection.current.onreconnecting(() => {
         setStatus('reconnecting');
@@ -117,6 +153,7 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
       });
 
       connection.current.on('MultiplierUpdate', (data: MultiplierUpdate) => {
+        hideLoader();
         gameContext.dispatch({ type: 'UPDATE_MULTIPLIER', payload: data });
         winContext.setIsPlaying(true);
         turnContext.show({
@@ -135,9 +172,11 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
       connection.current.on('Burn', (data) => {
         gameContext.dispatch({ type: 'SET_GAME', payload: null });
         burnContext.show(gameContext.state.defaultBurnTime, formatFormula(data.formula || '1/2'), '0,00');
+        hideLoader();
       });
 
       connection.current.on('NewGame', (data) => {
+        hideLoader();
         gameContext.dispatch({ type: 'SET_GAME', payload: data });
 
         turnContext.show({

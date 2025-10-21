@@ -10,8 +10,10 @@ type State = {
   user: User | null;
   leaderboard: Leaderboard | null;
   game: Game | null;
+  prevGameDetails: Game | null;
   defaultWinTime: number;
   defaultBurnTime: number;
+  defaultOpenTime: number;
 };
 
 // Action types as discriminated union
@@ -39,7 +41,7 @@ function reducer(state: State, action: Action): State {
     case 'SET_LEADERBOARD':
       return { ...state, leaderboard: action.payload };
     case 'SET_GAME':
-      return { ...state, game: action.payload };
+      return { ...state, game: action.payload, prevGameDetails: state.game };
     case 'UPDATE_MULTIPLIER':
       return state.game ? { ...state, game: { ...state.game, ...action.payload } } : state;
     case 'SET_MULTIPLE_FIELDS':
@@ -54,8 +56,10 @@ const initialState: State = {
   user: null,
   leaderboard: null,
   game: null,
-  defaultWinTime: 5,
+  prevGameDetails: null,
+  defaultWinTime: 8,
   defaultBurnTime: 5,
+  defaultOpenTime: 2,
 };
 
 // Hook

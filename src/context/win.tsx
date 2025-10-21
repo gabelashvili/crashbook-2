@@ -163,7 +163,7 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
     const turnSpine = animationContext.spines.turn;
     const turnSpineEntry = turnSpine?.state.tracks[0];
     if (turnSpineEntry) {
-      turnSpineEntry.timeScale = 40;
+      turnSpineEntry.timeScale = 5;
     }
 
     setTimeout(() => {
