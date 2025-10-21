@@ -83,7 +83,7 @@ const Header = () => {
           <p className="font-semibold text-base md:text-lg lg:text-xl text-[#48B098]">
             {formatCurrency(user.balance / 100)} <span className="text-[#21866E]">GEL</span>
           </p>
-          <div className="h-full relative">
+          <div className="h-full relative z-10">
             <button
               onClick={() => {
                 setOpenMenu(!openMenu);
