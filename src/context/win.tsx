@@ -95,8 +95,14 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
     const amountLabelMaxHeight = amountLabelEndY - amountLabelStartY;
     amountLabel.scale.set(amountLabelScale);
 
+    // spine.state.update(0);
+    // spine.state.apply(spine.skeleton);
+    // spine.skeleton.updateWorldTransform();
+
     const tickerFn = () => {
-      const isSlotVisible = slot?.getAttachment() !== null;
+      const isSlotVisible = !!slot?.attachment?.name;
+
+      console.log(slot?.attachment?.name);
       if (isSlotVisible) {
         label.visible = true;
         const labelStartX = bone!.worldX - 350 + 50;
