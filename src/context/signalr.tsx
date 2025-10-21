@@ -2,7 +2,7 @@ import React, { createContext, use, useCallback, useEffect, useRef, useState } f
 import type { ReactNode } from 'react';
 import type { TypedHubConnection } from '../types/hub';
 import { createGameHubConnection } from '../utils/signalr';
-import { ModalContext } from './modal';
+import { InfoModalContext } from './info-modal';
 import InfoIcon from '../components/icons/info';
 import type { User } from '../types/user';
 import { GameContext } from './game';
@@ -20,7 +20,7 @@ interface SignalRProviderProps {
 
 const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
   const gameContext = use(GameContext)!;
-  const modalContext = use(ModalContext);
+  const infoModalContext = use(InfoModalContext);
   const [status, setStatus] = useState<'connecting' | 'connected' | 'reconnecting' | 'disconnected'>('connecting');
   const connection = useRef<TypedHubConnection | null>(null);
 
@@ -52,7 +52,7 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
       connection.current.onclose(() => {
         setStatus('disconnected');
         if (!userNotFoundError.current) {
-          modalContext.setOpen({
+          infoModalContext.setOpen({
             title: 'Something went wrong',
             icon: InfoIcon,
             closable: false,
@@ -62,7 +62,7 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
 
       connection.current.on('UserNotFound', async () => {
         userNotFoundError.current = true;
-        modalContext.setOpen({
+        infoModalContext.setOpen({
           title: 'User or provider id not found',
           icon: InfoIcon,
           closable: false,
@@ -74,7 +74,7 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
       });
 
       connection.current.on('NewSession', () => {
-        modalContext.setOpen({
+        infoModalContext.setOpen({
           title: 'New session detected',
           icon: InfoIcon,
           closable: false,

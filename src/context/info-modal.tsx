@@ -1,7 +1,7 @@
 import React, { createContext, useState, type FC, type ReactNode, type SVGProps } from 'react';
-import Modal from '../components/ui/modal';
+import InfoModal from '../components/info-modal';
 
-export interface ModalContextType {
+export interface InfoModalContextType {
   open: null | {
     title: string;
     icon?: FC<SVGProps<SVGSVGElement>>;
@@ -18,7 +18,7 @@ export interface ModalContextType {
   ) => void;
 }
 
-const ModalContext = createContext<ModalContextType>({
+const InfoModalContext = createContext<InfoModalContextType>({
   open: null,
   setOpen: () => {},
 });
@@ -27,7 +27,7 @@ interface ModalProviderProps {
   children: ReactNode;
 }
 
-const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
+const InfoModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   const [open, setOpen] = useState<null | {
     title: string;
     icon?: FC;
@@ -36,19 +36,18 @@ const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   }>(null);
 
   return (
-    <ModalContext.Provider value={{ open, setOpen }}>
+    <InfoModalContext.Provider value={{ open, setOpen }}>
       {open && (
-        <Modal
+        <InfoModal
           icon={open.icon}
           title={open.title}
           button={open.button}
-          closable={open.closable ?? true}
-          onClose={() => setOpen(null)}
+          onClose={open.closable ? () => setOpen(null) : undefined}
         />
       )}
       {children}
-    </ModalContext.Provider>
+    </InfoModalContext.Provider>
   );
 };
 
-export { ModalContext, ModalProvider };
+export { InfoModalContext, InfoModalProvider };

@@ -1,6 +1,6 @@
 import React, { createContext, use, useEffect, type ReactNode } from 'react';
 import useGameStore from '../hooks/useGameStore';
-import { ModalContext } from './modal';
+import { InfoModalContext } from './info-modal';
 import InfoIcon from '../components/icons/info';
 
 export interface GameContextType {
@@ -17,7 +17,7 @@ interface GameProviderProps {
 }
 
 const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
-  const modalContext = use(ModalContext);
+  const infoModalContext = use(InfoModalContext);
 
   const { dispatch, state } = useGameStore();
   const searchParams = new URLSearchParams(window.location.search);
@@ -33,13 +33,14 @@ const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     }
 
     if (!playerId || !providerId) {
-      modalContext.setOpen({
+      infoModalContext.setOpen({
         title: 'No player or provider id found',
         icon: InfoIcon,
         closable: false,
       });
     }
-  }, [providerId, playerId, dispatch, modalContext]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [providerId, playerId, dispatch]);
 
   return (
     <GameContext.Provider value={{ providerId, playerId, state, dispatch }}>

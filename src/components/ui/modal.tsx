@@ -1,23 +1,11 @@
-import type { FC, ReactNode, SVGProps } from 'react';
+import type { ReactNode } from 'react';
 import CloseIcon from '../icons/close';
 
-const Modal = ({
-  icon: IconComponent,
-  title,
-  button,
-  closable = true,
-  onClose,
-}: {
-  icon?: FC<SVGProps<SVGSVGElement>>;
-  title: string;
-  button: ReactNode | null;
-  closable: boolean;
-  onClose: () => void;
-}) => {
+const Modal = ({ onClose, children }: { onClose?: () => void; children: ReactNode }) => {
   return (
     <div className="fixed w-full h-dvh bg-black/60 flex items-center justify-center z-50 ">
       <div className="bg-[#3B1252] border border-[#C5A973] rounded-sm max-w-md w-full aspect-[2/1.1] h-max relative  grid mx-4">
-        {closable && (
+        {onClose && (
           <button
             className="absolute top-0 right-0 size-8 flex items-end justify-center cursor-pointer z-20"
             onClick={onClose}
@@ -114,9 +102,7 @@ const Modal = ({
           </svg>
         </div>
         <div className="relative z-10 pt-8 pb-4 w-full h-full text-center flex flex-col items-center justify-center gap-4 lg:gap-6">
-          {IconComponent && <IconComponent className={'text-[#C6AA73] size-12 sm:size-16'} />}
-          <h1 className="sm:text-lg font-semibold text-white max-w-[80%]">{title}</h1>
-          {button && button}
+          {children}
         </div>
       </div>
     </div>

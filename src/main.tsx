@@ -10,11 +10,11 @@ import { FormulaContextProvider } from './context/formula.tsx';
 import { WinContextProvider } from './context/win.tsx';
 import { BurnContextProvider } from './context/burn.tsx';
 import { GameProvider } from './context/game.tsx';
-import { ModalProvider } from './context/modal.tsx';
+import { InfoModalProvider } from './context/info-modal.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ModalProvider>
+    <InfoModalProvider>
       <GameProvider>
         <SignalRProvider>
           <AnimationContextProvider>
@@ -32,6 +32,6 @@ createRoot(document.getElementById('root')!).render(
           </AnimationContextProvider>
         </SignalRProvider>
       </GameProvider>
-    </ModalProvider>
+    </InfoModalProvider>
   </StrictMode>,
 );
