@@ -81,15 +81,20 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
         });
       });
 
-      connection.current.on('GameData', (gameData: { user: User }) => {
-        gameContext.dispatch({ type: 'SET_USER', payload: gameData.user });
+      connection.current.on('GameData', (data: { user: User }) => {
+        gameContext.dispatch({ type: 'SET_USER', payload: data.user });
       });
 
       connection.current.on('UpdateBalance', (data: { balance: number }) => {
         gameContext.dispatch({ type: 'UPDATE_USER', payload: { balance: data.balance } });
       });
 
+      connection.current.on('Leaderboard', (data) => {
+        gameContext.dispatch({ type: 'SET_LEADERBOARD', payload: data.leaderboard });
+      });
+
       await connection.current.start();
+      connection.current.invoke('GetLeaderboard');
     } catch (error) {
       console.error('Failed to connect to SignalR:', error);
       setStatus('disconnected');

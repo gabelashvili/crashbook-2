@@ -1,5 +1,6 @@
 import type { HubConnection } from '@microsoft/signalr';
 import type { User } from './user';
+import type { Leaderboard } from './leaderboard';
 
 export interface HubEvents {
   UserNotFound: (test: number) => void;
@@ -7,10 +8,12 @@ export interface HubEvents {
   NewSession: (message: string) => void;
   GameData: (data: { user: User }) => void;
   UpdateBalance: (data: { balance: number }) => void;
+  Leaderboard: (data: { leaderboard: Leaderboard }) => void;
 }
 
 export interface HubServerMethods {
   UpdateBalance: void;
+  GetLeaderboard: void;
 }
 
 export type TypedHubConnection = Omit<HubConnection, 'on' | 'off' | 'invoke'> & {
