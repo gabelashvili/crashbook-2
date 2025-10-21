@@ -61,7 +61,6 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
 
   const handleFlip = useCallback(() => {
     if (!animationContext.application) return;
-    console.log('handleFlip', animationContext.application.canvas);
     animationContext.application.canvas.addEventListener('pointerdown', (e) => {
       const canvasWidth = (e.target as HTMLCanvasElement).clientWidth;
       if (canvasWidth - e.offsetX < canvasWidth / 4) {
