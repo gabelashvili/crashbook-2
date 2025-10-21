@@ -2,4 +2,5 @@
 
 body {
     overflow:hidden;
+    @apply bg-[url('/src/assets/images/body-bg-mobile.png')] md:bg-[url('/src/assets/images/body-bg.png')] bg-size-[100%_100%] bg-center
 }

@@ -5,6 +5,7 @@ import type { Spine } from '@esotericsoftware/spine-pixi-v8';
 import { createContext, useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Assets } from 'pixi.js';
 import { GifSprite, type GifSource } from 'pixi.js/gif';
+import LoadingIcon from '../components/icons/loading';
 
 type AnimationContextProps = {
   spines: { open: Spine | null; turn: Spine | null; win: Spine | null; burn: Spine | null };
@@ -207,7 +208,13 @@ const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
         setCurrentAnimation,
       }}
     >
-      {loading ? <div>Loading...</div> : children}
+      {loading ? (
+        <div className="h-dvh flex items-center justify-center">
+          <LoadingIcon className="size-12 text-[#C5A973]" />
+        </div>
+      ) : (
+        children
+      )}
     </AnimationContext.Provider>
   );
 };

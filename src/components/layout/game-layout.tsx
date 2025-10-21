@@ -1,10 +1,10 @@
 import { useContext } from 'react';
-import { AnimationContext } from '../context/animation';
-import { OpenContext } from '../context/open';
-import { TurnContext } from '../context/turn';
-import { FormulaContext } from '../context/formula';
-import { WinContext } from '../context/win';
-import { BurnContext } from '../context/burn';
+import { AnimationContext } from '../../context/animation';
+import { OpenContext } from '../../context/open';
+import { TurnContext } from '../../context/turn';
+import { FormulaContext } from '../../context/formula';
+import { WinContext } from '../../context/win';
+import { BurnContext } from '../../context/burn';
 
 const GameLayout = () => {
   const animationContext = useContext(AnimationContext);
