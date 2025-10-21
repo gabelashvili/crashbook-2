@@ -4,6 +4,7 @@ import type { HubConnection } from '@microsoft/signalr';
 export interface HubEvents {
   UserNotFound: (test: number) => void;
   UserConnected: () => void;
+  NewSession: (message: string) => void;
 }
 
 export interface HubServerMethods {
