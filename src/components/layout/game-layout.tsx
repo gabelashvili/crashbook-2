@@ -6,6 +6,8 @@ import { FormulaContext } from '../../context/formula';
 import { WinContext } from '../../context/win';
 import { BurnContext } from '../../context/burn';
 import { SignalRContext } from '../../context/signalr';
+import { GameContext } from '../../context/game';
+import cn from '../../utils/cn';
 
 const GameLayout = () => {
   const animationContext = useContext(AnimationContext);
@@ -15,9 +17,11 @@ const GameLayout = () => {
   const formulaContext = useContext(FormulaContext);
   const winContext = useContext(WinContext);
   const burnContext = useContext(BurnContext);
+  const gameContext = useContext(GameContext);
+  console.log(gameContext?.state.game);
   return (
     <div className="grid grid-rows-[1fr_minmax(0,_min-content)]  py-6 max-w-2xl aspect-[1/1.5] max-h-[780px] w-full m-auto px-2">
-      <div className="relative w-full h-full flex flex-col overflow-hidden ">
+      <div className="relative w-full h-full flex flex-col overflow-hidden bg-[#1B092469]/60">
         <img
           src="/src/assets/images/game-container-hood.png"
           alt="game-container-hood"
@@ -36,8 +40,25 @@ const GameLayout = () => {
           Header
         </div>
         <div ref={animationContext.setContainer} className="h-full w-full flex z-10" />
-        <div id="flip-next" className="bg-emerald-800 w-full h-fit">
-          Footer
+        <div
+          id="flip-next"
+          className={cn(
+            'w-full h-[50px] min-h-[70px] flex items-center justify-center',
+            !gameContext?.state.game ? 'opacity-60 pointer-events-none' : ' opacity-100',
+          )}
+          onClick={() => {
+            console.log(winContext.isPlaying);
+            if (winContext.isPlaying) {
+              winContext.finish();
+              return;
+            }
+            if (!gameContext?.state.game?.id) {
+              return;
+            }
+            signalRContext?.connection?.invoke('TurnThePage', { gameId: gameContext?.state.game?.id });
+          }}
+        >
+          <img src="/src/assets/images/next.png" alt="flip-next" className="w-[80%] h-[40px]" />
         </div>
       </div>
       <div className="bg-blue-500 h-fit min-h-[150px] space-x-6">
@@ -48,7 +69,18 @@ const GameLayout = () => {
         >
           Create Game
         </button>
-        <button onClick={() => winContext.finish()}>Stop formula</button>
+        <button
+          onClick={() => {
+            if (winContext.isPlaying) {
+              winContext.finish();
+            } else {
+              console.log('win is not playing');
+            }
+          }}
+        >
+          Stop win
+        </button>
+        <button onClick={() => gameContext?.dispatch({ type: 'SET_GAME', payload: null })}>Reset game</button>
         {/* <button
           onClick={() => {
             bookOpenContext.show({ showIddle: true });

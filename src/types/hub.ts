@@ -1,7 +1,7 @@
 import type { HubConnection } from '@microsoft/signalr';
 import type { User } from './user';
 import type { Leaderboard } from './leaderboard';
-import type { Game } from './game';
+import type { Burn, Game, MultiplierUpdate } from './game';
 
 export interface HubEvents {
   UserNotFound: (test: number) => void;
@@ -10,6 +10,9 @@ export interface HubEvents {
   GameData: (data: { user: User; gameData: Game }) => void;
   UpdateBalance: (data: { balance: number }) => void;
   Leaderboard: (data: { leaderboard: Leaderboard }) => void;
+  MultiplierUpdate: (data: MultiplierUpdate) => void;
+  Burn: (data: Burn) => void;
+  NewGame: (data: Game) => void;
 }
 
 export interface HubServerMethods {
@@ -17,6 +20,9 @@ export interface HubServerMethods {
   GetLeaderboard: void;
   CreateGame: {
     betAmount: number;
+  };
+  TurnThePage: {
+    gameId: number;
   };
 }
 

@@ -1,7 +1,7 @@
 import { useReducer } from 'react';
 import type { User } from '../types/user';
 import type { Leaderboard } from '../types/leaderboard';
-import type { Game } from '../types/game';
+import type { Game, MultiplierUpdate } from '../types/game';
 
 // Define the state
 type State = {
@@ -10,6 +10,8 @@ type State = {
   user: User | null;
   leaderboard: Leaderboard | null;
   game: Game | null;
+  defaultWinTime: number;
+  defaultBurnTime: number;
 };
 
 // Action types as discriminated union
@@ -19,7 +21,8 @@ type Action =
   | { type: 'SET_USER'; payload: State['user'] }
   | { type: 'UPDATE_USER'; payload: Partial<User> }
   | { type: 'SET_LEADERBOARD'; payload: Leaderboard }
-  | { type: 'SET_GAME'; payload: Game }
+  | { type: 'SET_GAME'; payload: Game | null }
+  | { type: 'UPDATE_MULTIPLIER'; payload: MultiplierUpdate }
   | { type: 'SET_MULTIPLE_FIELDS'; payload: Partial<State> };
 
 // Reducer using switch
@@ -37,10 +40,10 @@ function reducer(state: State, action: Action): State {
       return { ...state, leaderboard: action.payload };
     case 'SET_GAME':
       return { ...state, game: action.payload };
+    case 'UPDATE_MULTIPLIER':
+      return state.game ? { ...state, game: { ...state.game, ...action.payload } } : state;
     case 'SET_MULTIPLE_FIELDS':
       return { ...state, ...action.payload };
-    default:
-      return state;
   }
 }
 
@@ -51,6 +54,8 @@ const initialState: State = {
   user: null,
   leaderboard: null,
   game: null,
+  defaultWinTime: 5,
+  defaultBurnTime: 5,
 };
 
 // Hook

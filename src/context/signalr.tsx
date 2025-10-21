@@ -9,6 +9,8 @@ import { OpenContext } from './open';
 import { TurnContext } from './turn';
 import { WinContext } from './win';
 import { formatFormula } from '../utils/formula';
+import type { MultiplierUpdate } from '../types/game';
+import { BurnContext } from './burn';
 
 export interface SignalRContextType {
   connection: TypedHubConnection | null;
@@ -26,6 +28,7 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
   const openContext = use(OpenContext);
   const turnContext = use(TurnContext);
   const winContext = use(WinContext);
+  const burnContext = use(BurnContext);
   const infoModalContext = use(InfoModalContext);
   const [status, setStatus] = useState<'connecting' | 'connected' | 'reconnecting' | 'disconnected'>('connecting');
   const connection = useRef<TypedHubConnection | null>(null);
@@ -96,7 +99,7 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
         if (data.gameData) {
           gameContext.dispatch({ type: 'SET_GAME', payload: data.gameData });
           turnContext.show({
-            duration: 2,
+            duration: 0.01,
             onFinish: () => {
               winContext.show(2, formatFormula(data.gameData.formula), data.gameData.potentialWin.toString());
               turnContext.setOnFlipCallback(() => turnContext.show({ duration: 2 }));
@@ -111,6 +114,43 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
 
       connection.current.on('Leaderboard', (data) => {
         gameContext.dispatch({ type: 'SET_LEADERBOARD', payload: data.leaderboard });
+      });
+
+      connection.current.on('MultiplierUpdate', (data: MultiplierUpdate) => {
+        gameContext.dispatch({ type: 'UPDATE_MULTIPLIER', payload: data });
+        winContext.setIsPlaying(true);
+        turnContext.show({
+          duration: gameContext.state.defaultWinTime * 0.3,
+          onFinish: () => {
+            winContext.show(
+              gameContext.state.defaultWinTime * 0.7,
+              formatFormula(data.formula),
+              data.potentialWin.toString(),
+            );
+            turnContext.setOnFlipCallback(() => turnContext.show({ duration: gameContext.state.defaultWinTime * 0.3 }));
+          },
+        });
+      });
+
+      connection.current.on('Burn', (data) => {
+        gameContext.dispatch({ type: 'SET_GAME', payload: null });
+        burnContext.show(gameContext.state.defaultBurnTime, formatFormula(data.formula || '1/2'), '0,00');
+      });
+
+      connection.current.on('NewGame', (data) => {
+        gameContext.dispatch({ type: 'SET_GAME', payload: data });
+
+        turnContext.show({
+          duration: gameContext.state.defaultWinTime * 0.3,
+          onFinish: () => {
+            winContext.show(
+              gameContext.state.defaultWinTime * 0.7,
+              formatFormula(data.formula),
+              data.potentialWin.toString(),
+            );
+            turnContext.setOnFlipCallback(() => turnContext.show({ duration: 2 }));
+          },
+        });
       });
 
       await connection.current.start();

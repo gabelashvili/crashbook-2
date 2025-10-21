@@ -1,4 +1,4 @@
-import { createContext, use, useRef, useCallback, type ReactNode, useEffect } from 'react';
+import { createContext, use, useRef, useCallback, type ReactNode, useEffect, useState } from 'react';
 import { AnimationContext } from './animation';
 import { FormulaContext, type FormulaKey } from './formula';
 import * as PIXI from 'pixi.js';
@@ -13,11 +13,15 @@ declare global {
 type WinContextProps = {
   show: (duration: number, formula: FormulaKey[], winAmount: string) => Promise<void>;
   finish: () => void;
+  isPlaying: boolean;
+  setIsPlaying: (isPlaying: boolean) => void;
 };
 
 const WinContext = createContext<WinContextProps>({
   show: () => Promise.resolve(),
   finish: () => {},
+  isPlaying: false,
+  setIsPlaying: () => {},
 });
 
 const WinContextProvider = ({ children }: { children: ReactNode }) => {
@@ -25,9 +29,12 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
   const formulaContext = use(FormulaContext);
   const spine = animationContext.spines.win!;
   const currentAbort = useRef<AbortController | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const lasttDataRef = useRef<{ formula: FormulaKey[]; winAmount: string } | null>(null);
 
   const stopAnimation = useCallback(() => {
     currentAbort.current?.abort();
+    setIsPlaying(false);
     spine.removeChildren();
     spine.visible = false;
     spine.state.clearTracks();
@@ -38,6 +45,8 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
 
     currentAbort.current?.abort();
     window.stopBurnAnimation?.();
+    setIsPlaying(true);
+    lasttDataRef.current = { formula, winAmount };
 
     if (!animationContext.spines.turn?.visible) {
       throw new Error('Turn spine is not visible');
@@ -53,7 +62,7 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
     entry.timeScale = 0;
     entry.animationEnd = entry.animation!.duration - 3.2;
 
-    const formulaDuration = duration * 0.5;
+    const formulaDuration = duration * 0.3;
     const spineDuration = duration - formulaDuration;
 
     ////
@@ -132,6 +141,7 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
       entry.listener = {
         complete: () => {
           if (signal.aborted) return;
+          setIsPlaying(false);
           spine.state.clearTracks();
           spine.update(0);
           resolve();
@@ -143,25 +153,34 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
         durationSec: formulaDuration,
         onFinish: () => {
           if (signal.aborted) return;
-          entry.timeScale = (entry.animation!.duration - 3.2 - 6.6) / spineDuration;
+          entry.timeScale = (entry.animation?.duration ?? 0 - 3.2 - 6.6) / spineDuration;
         },
       });
     });
   };
 
   const finish = () => {
-    formulaContext.finish();
-    const lastEntry = spine.state.tracks[0];
-    if (lastEntry) {
-      lastEntry.timeScale = 15;
+    const turnSpine = animationContext.spines.turn;
+    const turnSpineEntry = turnSpine?.state.tracks[0];
+    if (turnSpineEntry) {
+      turnSpineEntry.timeScale = 40;
     }
+
+    setTimeout(() => {
+      formulaContext.finish();
+      setIsPlaying(false);
+      const lastEntry = spine.state.tracks[0];
+      if (lastEntry) {
+        lastEntry.timeScale = 15;
+      }
+    }, 150);
   };
 
   useEffect(() => {
     window.stopWinAnimation = stopAnimation;
   }, [stopAnimation]);
 
-  return <WinContext.Provider value={{ show, finish }}>{children}</WinContext.Provider>;
+  return <WinContext.Provider value={{ show, finish, isPlaying, setIsPlaying }}>{children}</WinContext.Provider>;
 };
 
 export { WinContext, WinContextProvider };
