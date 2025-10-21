@@ -12,10 +12,12 @@ declare global {
 
 type WinContextProps = {
   show: (duration: number, formula: FormulaKey[], winAmount: string) => Promise<void>;
+  finish: () => void;
 };
 
 const WinContext = createContext<WinContextProps>({
   show: () => Promise.resolve(),
+  finish: () => {},
 });
 
 const WinContextProvider = ({ children }: { children: ReactNode }) => {
@@ -95,14 +97,9 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
     const amountLabelMaxHeight = amountLabelEndY - amountLabelStartY;
     amountLabel.scale.set(amountLabelScale);
 
-    // spine.state.update(0);
-    // spine.state.apply(spine.skeleton);
-    // spine.skeleton.updateWorldTransform();
-
     const tickerFn = () => {
       const isSlotVisible = !!slot?.attachment?.name;
 
-      console.log(slot?.attachment?.name);
       if (isSlotVisible) {
         label.visible = true;
         const labelStartX = bone!.worldX - 350 + 50;
@@ -152,11 +149,19 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const finish = () => {
+    formulaContext.finish();
+    const lastEntry = spine.state.tracks[0];
+    if (lastEntry) {
+      lastEntry.timeScale = 15;
+    }
+  };
+
   useEffect(() => {
     window.stopWinAnimation = stopAnimation;
   }, [stopAnimation]);
 
-  return <WinContext.Provider value={{ show }}>{children}</WinContext.Provider>;
+  return <WinContext.Provider value={{ show, finish }}>{children}</WinContext.Provider>;
 };
 
 export { WinContext, WinContextProvider };

@@ -96,9 +96,9 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
         if (data.gameData) {
           gameContext.dispatch({ type: 'SET_GAME', payload: data.gameData });
           turnContext.show({
-            duration: 0.1,
+            duration: 2,
             onFinish: () => {
-              winContext.show(0.1, formatFormula(data.gameData.formula), data.gameData.potentialWin.toString());
+              winContext.show(2, formatFormula(data.gameData.formula), data.gameData.potentialWin.toString());
               turnContext.setOnFlipCallback(() => turnContext.show({ duration: 2 }));
             },
           });

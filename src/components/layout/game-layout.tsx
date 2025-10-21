@@ -48,6 +48,7 @@ const GameLayout = () => {
         >
           Create Game
         </button>
+        <button onClick={() => winContext.finish()}>Stop formula</button>
         {/* <button
           onClick={() => {
             bookOpenContext.show({ showIddle: true });
