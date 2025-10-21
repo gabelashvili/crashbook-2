@@ -4,6 +4,8 @@ import type { TypedHubConnection } from '../types/hub';
 import { createGameHubConnection } from '../utils/signalr';
 import { ModalContext } from './modal';
 import InfoIcon from '../components/icons/info';
+import type { User } from '../types/user';
+import { GameContext } from './game';
 
 export interface SignalRContextType {
   connection: TypedHubConnection | null;
@@ -16,7 +18,8 @@ interface SignalRProviderProps {
   children: ReactNode;
 }
 
-export const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
+const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
+  const gameContext = use(GameContext)!;
   const modalContext = use(ModalContext);
   const [status, setStatus] = useState<'connecting' | 'connected' | 'reconnecting' | 'disconnected'>('connecting');
   const connection = useRef<TypedHubConnection | null>(null);
@@ -78,11 +81,20 @@ export const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) =>
         });
       });
 
+      connection.current.on('GameData', (gameData: { user: User }) => {
+        gameContext.dispatch({ type: 'SET_USER', payload: gameData.user });
+      });
+
+      connection.current.on('UpdateBalance', (data: { balance: number }) => {
+        gameContext.dispatch({ type: 'UPDATE_USER', payload: { balance: data.balance } });
+      });
+
       await connection.current.start();
     } catch (error) {
       console.error('Failed to connect to SignalR:', error);
       setStatus('disconnected');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playerId, providerId]);
 
   useEffect(() => {
@@ -102,3 +114,5 @@ export const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) =>
 
   return <SignalRContext.Provider value={value}>{children}</SignalRContext.Provider>;
 };
+
+export { SignalRContext, SignalRProvider };

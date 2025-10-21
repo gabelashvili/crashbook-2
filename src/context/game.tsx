@@ -6,6 +6,8 @@ import InfoIcon from '../components/icons/info';
 export interface GameContextType {
   providerId: string | null;
   playerId: string | null;
+  state: ReturnType<typeof useGameStore>['state'];
+  dispatch: ReturnType<typeof useGameStore>['dispatch'];
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -14,10 +16,10 @@ interface GameProviderProps {
   children: ReactNode;
 }
 
-export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
+const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const modalContext = use(ModalContext);
 
-  const { dispatch } = useGameStore();
+  const { dispatch, state } = useGameStore();
   const searchParams = new URLSearchParams(window.location.search);
   const providerId = searchParams.get('providerId');
   const playerId = searchParams.get('playerId');
@@ -40,8 +42,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   }, [providerId, playerId, dispatch, modalContext]);
 
   return (
-    <GameContext.Provider value={{ providerId, playerId }}>
+    <GameContext.Provider value={{ providerId, playerId, state, dispatch }}>
       {playerId && providerId ? children : null}
     </GameContext.Provider>
   );
 };
+
+export { GameProvider, GameContext };
