@@ -33,7 +33,7 @@ const GameLayout = () => {
         >
           Header
         </div>
-        <div ref={animationContext.setContainer} className="h-full w-full flex" />
+        <div ref={animationContext.setContainer} className="h-full w-full flex z-10" />
         <div id="flip-next" className="bg-emerald-800 w-full h-fit">
           Footer
         </div>
@@ -94,6 +94,13 @@ const GameLayout = () => {
           }}
         >
           show formula
+        </button>
+        <button
+          onClick={() => {
+            turnContext.setOnFlipCallback(() => turnContext.show({ duration: 1 }));
+          }}
+        >
+          set on flip callback
         </button>
         <button
           onClick={() => {

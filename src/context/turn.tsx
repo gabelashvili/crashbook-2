@@ -1,4 +1,4 @@
-import { createContext, use, useEffect, useRef, useState, type ReactNode } from 'react';
+import { createContext, use, useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { AnimationContext } from './animation';
 
 // Define the shape of your context
@@ -6,6 +6,7 @@ type TurnContextProps = {
   show: (data: { duration?: number; onFinish?: () => void }) => Promise<void>;
   initialDuration: number;
   isTurning: boolean;
+  setOnFlipCallback: (cb: () => void) => void;
 };
 
 // Create the context with a default value (can be null)
@@ -13,7 +14,11 @@ const TurnContext = createContext<TurnContextProps>({
   show: () => Promise.resolve(),
   initialDuration: 0,
   isTurning: false,
+  setOnFlipCallback: () => {},
 });
+
+const THRESHOLD_SPEED = 0.5;
+const THRESHOLD_DISTANCE = 10;
 
 // Context Provider
 const TurnContextProvider = ({ children }: { children: ReactNode }) => {
@@ -23,6 +28,11 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
   const tickerFnRef = useRef<() => void>(() => {});
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isTurning, setIsTurning] = useState(false);
+  const isPointerDown = useRef(false);
+  const lastX = useRef(0);
+  const lastTime = useRef(0);
+
+  const onFlip = useRef<() => void | null>(null);
 
   const show = async ({ duration = initialDuration, onFinish }: { duration?: number; onFinish?: () => void }) => {
     spine.removeChildren();
@@ -49,6 +59,47 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
     };
   };
 
+  const handleFlip = useCallback(() => {
+    if (!animationContext.application) return;
+    console.log('handleFlip', animationContext.application.canvas);
+    animationContext.application.canvas.addEventListener('pointerdown', (e) => {
+      const canvasWidth = (e.target as HTMLCanvasElement).clientWidth;
+      if (canvasWidth - e.offsetX < canvasWidth / 4) {
+        isPointerDown.current = true;
+      }
+    });
+
+    animationContext.application.canvas.addEventListener('pointerup', () => {
+      isPointerDown.current = false;
+    });
+
+    animationContext.application.canvas.addEventListener('mousemove', (e) => {
+      const currentX = e.x;
+      const currentTime = performance.now();
+
+      const deltaX = currentX - lastX.current;
+      const deltaTime = currentTime - lastTime.current;
+
+      const speed = Math.abs(deltaX / deltaTime); // pixels/ms
+
+      if (Math.abs(deltaX) >= THRESHOLD_DISTANCE && speed >= THRESHOLD_SPEED && isPointerDown.current) {
+        isPointerDown.current = false;
+        onFlip?.current?.();
+      }
+
+      lastX.current = currentX;
+      lastTime.current = currentTime;
+    });
+  }, [animationContext.application, onFlip]);
+
+  const setOnFlipCallback = (cb: () => void) => {
+    onFlip.current = cb;
+  };
+
+  useEffect(() => {
+    handleFlip();
+  }, [handleFlip]);
+
   useEffect(() => {
     return () => {
       if (timerRef.current) {
@@ -62,6 +113,7 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
         show,
         initialDuration,
         isTurning,
+        setOnFlipCallback,
       }}
     >
       {children}
