@@ -1,6 +1,7 @@
 import { useReducer } from 'react';
 import type { User } from '../types/user';
 import type { Leaderboard } from '../types/leaderboard';
+import type { Game } from '../types/game';
 
 // Define the state
 type State = {
@@ -8,6 +9,7 @@ type State = {
   playerId: number;
   user: User | null;
   leaderboard: Leaderboard | null;
+  game: Game | null;
 };
 
 // Action types as discriminated union
@@ -17,6 +19,7 @@ type Action =
   | { type: 'SET_USER'; payload: State['user'] }
   | { type: 'UPDATE_USER'; payload: Partial<User> }
   | { type: 'SET_LEADERBOARD'; payload: Leaderboard }
+  | { type: 'SET_GAME'; payload: Game }
   | { type: 'SET_MULTIPLE_FIELDS'; payload: Partial<State> };
 
 // Reducer using switch
@@ -32,6 +35,8 @@ function reducer(state: State, action: Action): State {
       return state.user ? { ...state, user: { ...state.user, ...action.payload } } : state;
     case 'SET_LEADERBOARD':
       return { ...state, leaderboard: action.payload };
+    case 'SET_GAME':
+      return { ...state, game: action.payload };
     case 'SET_MULTIPLE_FIELDS':
       return { ...state, ...action.payload };
     default:
@@ -45,6 +50,7 @@ const initialState: State = {
   playerId: 0,
   user: null,
   leaderboard: null,
+  game: null,
 };
 
 // Hook

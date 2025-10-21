@@ -79,7 +79,7 @@ const FormulaContextProvider = ({ children }: { children: ReactNode }) => {
     let prevX = 100 - (totalWidthRaw * scale <= rect.width ? (totalWidthRaw * scale - rect.width) / 2 : 0);
     let playIndex = 0;
 
-    const maxSpriteHeight = Math.max(...animationSprites.map((sprite) => sprite.height));
+    // const maxSpriteHeight = Math.max(...animationSprites.map((sprite) => sprite.height));
 
     const playNext = () => {
       if (playIndex >= animationSprites.length) {
@@ -101,10 +101,11 @@ const FormulaContextProvider = ({ children }: { children: ReactNode }) => {
 
       // Vertical centering
 
-      let yPosition = -rect.height / 2 + (maxSpriteHeight * scale) / 2 + 20;
+      let yPosition = -rect.height / 2 + 20;
       if (formula[playIndex] === 'equal') {
         yPosition += 25;
       }
+
       sprite.y = yPosition;
 
       const animationSpeed = totalDuration / (options?.durationSec ?? 1);

@@ -4,8 +4,11 @@ import type { TypedHubConnection } from '../types/hub';
 import { createGameHubConnection } from '../utils/signalr';
 import { InfoModalContext } from './info-modal';
 import InfoIcon from '../components/icons/info';
-import type { User } from '../types/user';
 import { GameContext } from './game';
+import { OpenContext } from './open';
+import { TurnContext } from './turn';
+import { WinContext } from './win';
+import { formatFormula } from '../utils/formula';
 
 export interface SignalRContextType {
   connection: TypedHubConnection | null;
@@ -20,6 +23,9 @@ interface SignalRProviderProps {
 
 const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
   const gameContext = use(GameContext)!;
+  const openContext = use(OpenContext);
+  const turnContext = use(TurnContext);
+  const winContext = use(WinContext);
   const infoModalContext = use(InfoModalContext);
   const [status, setStatus] = useState<'connecting' | 'connected' | 'reconnecting' | 'disconnected'>('connecting');
   const connection = useRef<TypedHubConnection | null>(null);
@@ -81,8 +87,22 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
         });
       });
 
-      connection.current.on('GameData', (data: { user: User }) => {
+      connection.current.on('GameData', (data) => {
         gameContext.dispatch({ type: 'SET_USER', payload: data.user });
+        if (!data.gameData) {
+          openContext.show({ showIddle: true });
+        }
+
+        if (data.gameData) {
+          gameContext.dispatch({ type: 'SET_GAME', payload: data.gameData });
+          turnContext.show({
+            duration: 2,
+            onFinish: () => {
+              winContext.show(3, formatFormula(data.gameData.formula), data.gameData.potentialWin.toString());
+              turnContext.setOnFlipCallback(() => turnContext.show({ duration: 2 }));
+            },
+          });
+        }
       });
 
       connection.current.on('UpdateBalance', (data: { balance: number }) => {

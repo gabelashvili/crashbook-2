@@ -16,21 +16,21 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <InfoModalProvider>
       <GameProvider>
-        <SignalRProvider>
-          <AnimationContextProvider>
-            <OpenContextProvider>
-              <TurnContextProvider>
-                <FormulaContextProvider>
-                  <WinContextProvider>
-                    <BurnContextProvider>
+        <AnimationContextProvider>
+          <OpenContextProvider>
+            <TurnContextProvider>
+              <FormulaContextProvider>
+                <WinContextProvider>
+                  <BurnContextProvider>
+                    <SignalRProvider>
                       <App />
-                    </BurnContextProvider>
-                  </WinContextProvider>
-                </FormulaContextProvider>
-              </TurnContextProvider>
-            </OpenContextProvider>
-          </AnimationContextProvider>
-        </SignalRProvider>
+                    </SignalRProvider>
+                  </BurnContextProvider>
+                </WinContextProvider>
+              </FormulaContextProvider>
+            </TurnContextProvider>
+          </OpenContextProvider>
+        </AnimationContextProvider>
       </GameProvider>
     </InfoModalProvider>
   </StrictMode>,

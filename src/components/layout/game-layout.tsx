@@ -5,9 +5,11 @@ import { TurnContext } from '../../context/turn';
 import { FormulaContext } from '../../context/formula';
 import { WinContext } from '../../context/win';
 import { BurnContext } from '../../context/burn';
+import { SignalRContext } from '../../context/signalr';
 
 const GameLayout = () => {
   const animationContext = useContext(AnimationContext);
+  const signalRContext = useContext(SignalRContext);
   const bookOpenContext = useContext(OpenContext);
   const turnContext = useContext(TurnContext);
   const formulaContext = useContext(FormulaContext);
@@ -40,6 +42,13 @@ const GameLayout = () => {
       </div>
       <div className="bg-blue-500 h-fit min-h-[150px] space-x-6">
         <button
+          onClick={() => {
+            signalRContext?.connection?.invoke('CreateGame', { betAmount: 100 });
+          }}
+        >
+          Create Game
+        </button>
+        {/* <button
           onClick={() => {
             bookOpenContext.show({ showIddle: true });
           }}
@@ -123,7 +132,7 @@ const GameLayout = () => {
           }}
         >
           show burn
-        </button>
+        </button> */}
       </div>
     </div>
   );
