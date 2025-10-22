@@ -25,7 +25,7 @@ const showBurnTitle = (spine: PIXI.Container) => {
   const labelColor = new PIXI.Color({ r: 120, g: 67, b: 0, a: 0.9 });
 
   const label = new PIXI.Text({
-    text: 'Potential Winning',
+    text: 'Current Winning',
     style: {
       fontSize: 68,
       fill: labelColor,
