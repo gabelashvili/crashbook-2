@@ -101,7 +101,6 @@ const BurnContextProvider = ({ children }: { children: ReactNode }) => {
   const currentAbort = useRef<AbortController | null>(null);
 
   const stopAnimation = useCallback(() => {
-    console.log('stopAnimation', currentAbort.current);
     animationContext.spines.turn!.removeChildren();
     spine.visible = false;
     spine.removeChildren();

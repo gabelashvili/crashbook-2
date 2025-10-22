@@ -163,7 +163,7 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
     const turnSpine = animationContext.spines.turn;
     const turnSpineEntry = turnSpine?.state.tracks[0];
     if (turnSpineEntry) {
-      turnSpineEntry.timeScale = 5;
+      turnSpineEntry.timeScale = 10;
     }
 
     setTimeout(() => {
@@ -173,7 +173,7 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
       if (lastEntry) {
         lastEntry.timeScale = 15;
       }
-    }, 150);
+    }, 200);
   };
 
   useEffect(() => {

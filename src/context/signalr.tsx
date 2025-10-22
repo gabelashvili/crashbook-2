@@ -34,6 +34,8 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
   const connection = useRef<TypedHubConnection | null>(null);
   const lastPageTurnTime = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  /// TODO: if hackpot happen hide loader
+
   // Temp solution when user not found error is thrown, we don't want to show the modal again on disconnect
   const userNotFoundError = useRef(false);
 
@@ -180,7 +182,7 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
         gameContext.dispatch({ type: 'SET_GAME', payload: data });
 
         turnContext.show({
-          duration: gameContext.state.defaultWinTime * 0.3,
+          duration: 0.01,
           onFinish: () => {
             winContext.show(
               gameContext.state.defaultWinTime * 0.7,

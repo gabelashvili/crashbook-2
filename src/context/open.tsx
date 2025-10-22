@@ -31,7 +31,6 @@ const OpenContextProvider = ({ children }: { children: ReactNode }) => {
         : spine.state.setAnimation(0, 'animation', false);
 
     if (showIddle) {
-      console.log('showIddle');
       entry.trackTime = 0;
       tickerFnRef.current = () => {
         if (entry.trackTime >= 0.3) {
@@ -53,7 +52,6 @@ const OpenContextProvider = ({ children }: { children: ReactNode }) => {
     entry.listener = {
       complete: () => {
         spine.state.clearTracks();
-        console.log('complete');
       },
     };
   };

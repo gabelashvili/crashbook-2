@@ -66,7 +66,7 @@ const GameLayout = () => {
             if (winContext.isPlaying) {
               winContext.finish();
             } else {
-              console.log('win is not playing');
+              // console.log('win is not playing');
             }
           }}
         >

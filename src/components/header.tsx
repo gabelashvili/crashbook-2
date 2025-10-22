@@ -27,7 +27,6 @@ const Header = () => {
         !menuRef.current.contains(event.target as Node) &&
         !menuButtonToggleButtonRef.current?.contains(event.target as Node)
       ) {
-        console.log('clicked outside');
         setOpenMenu(false);
       }
     },
