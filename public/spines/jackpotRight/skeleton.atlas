@@ -1,0 +1,446 @@
+
+skeleton.png
+size: 4021,4072
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+right page text
+  rotate: false
+  xy: 2, 3992
+  size: 367, 78
+  orig: 434, 122
+  offset: 42, 21
+  index: -1
+text box effect/text box effect_00001
+  rotate: true
+  xy: 371, 3965
+  size: 105, 123
+  orig: 966, 748
+  offset: 123, 461
+  index: -1
+text box effect/text box effect_00002
+  rotate: true
+  xy: 496, 3947
+  size: 123, 172
+  orig: 966, 748
+  offset: 123, 412
+  index: -1
+text box effect/text box effect_00003
+  rotate: true
+  xy: 670, 3946
+  size: 124, 217
+  orig: 966, 748
+  offset: 123, 367
+  index: -1
+text box effect/text box effect_00004
+  rotate: true
+  xy: 1209, 3944
+  size: 126, 255
+  orig: 966, 748
+  offset: 122, 329
+  index: -1
+text box effect/text box effect_00005
+  rotate: true
+  xy: 889, 3945
+  size: 125, 318
+  orig: 966, 748
+  offset: 123, 266
+  index: -1
+text box effect/text box effect_00006
+  rotate: true
+  xy: 1466, 3944
+  size: 126, 379
+  orig: 966, 748
+  offset: 123, 206
+  index: -1
+text box effect/text box effect_00007
+  rotate: true
+  xy: 1847, 3944
+  size: 126, 408
+  orig: 966, 748
+  offset: 122, 177
+  index: -1
+text box effect/text box effect_00008
+  rotate: true
+  xy: 2257, 3934
+  size: 136, 430
+  orig: 966, 748
+  offset: 122, 155
+  index: -1
+text box effect/text box effect_00009
+  rotate: true
+  xy: 2689, 3882
+  size: 188, 431
+  orig: 966, 748
+  offset: 122, 154
+  index: -1
+text box effect/text box effect_00010
+  rotate: true
+  xy: 3122, 3836
+  size: 234, 431
+  orig: 966, 748
+  offset: 122, 154
+  index: -1
+text box effect/text box effect_00011
+  rotate: true
+  xy: 3555, 3764
+  size: 306, 431
+  orig: 966, 748
+  offset: 121, 154
+  index: -1
+text box effect/text box effect_00012
+  rotate: true
+  xy: 2, 3614
+  size: 349, 431
+  orig: 966, 748
+  offset: 122, 154
+  index: -1
+text box effect/text box effect_00013
+  rotate: true
+  xy: 435, 3539
+  size: 405, 431
+  orig: 966, 748
+  offset: 122, 154
+  index: -1
+text box effect/text box effect_00014
+  rotate: false
+  xy: 2167, 3500
+  size: 465, 432
+  orig: 966, 748
+  offset: 122, 154
+  index: -1
+text box effect/text box effect_00015
+  rotate: false
+  xy: 2098, 3066
+  size: 514, 432
+  orig: 966, 748
+  offset: 123, 154
+  index: -1
+text box effect/text box effect_00016
+  rotate: false
+  xy: 2614, 2969
+  size: 548, 432
+  orig: 966, 748
+  offset: 123, 154
+  index: -1
+text box effect/text box effect_00017
+  rotate: false
+  xy: 868, 3511
+  size: 625, 431
+  orig: 966, 748
+  offset: 122, 154
+  index: -1
+text box effect/text box effect_00018
+  rotate: false
+  xy: 1495, 3511
+  size: 670, 431
+  orig: 966, 748
+  offset: 122, 154
+  index: -1
+text box effect/text box effect_00019
+  rotate: false
+  xy: 2634, 3403
+  size: 687, 431
+  orig: 966, 748
+  offset: 123, 154
+  index: -1
+text box effect/text box effect_00020
+  rotate: false
+  xy: 3323, 3331
+  size: 696, 431
+  orig: 966, 748
+  offset: 122, 154
+  index: -1
+text box effect/text box effect_00021
+  rotate: false
+  xy: 3164, 2897
+  size: 696, 432
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00022
+  rotate: false
+  xy: 2, 3106
+  size: 697, 431
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00023
+  rotate: false
+  xy: 701, 3078
+  size: 696, 431
+  orig: 966, 748
+  offset: 123, 153
+  index: -1
+text box effect/text box effect_00024
+  rotate: false
+  xy: 1399, 3078
+  size: 697, 431
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00025
+  rotate: false
+  xy: 2, 2672
+  size: 697, 432
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00026
+  rotate: false
+  xy: 701, 2643
+  size: 697, 433
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00027
+  rotate: false
+  xy: 2, 2232
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00028
+  rotate: true
+  xy: 3496, 803
+  size: 697, 439
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00029
+  rotate: false
+  xy: 701, 2203
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00030
+  rotate: false
+  xy: 2098, 2090
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00031
+  rotate: true
+  xy: 3500, 104
+  size: 697, 439
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00032
+  rotate: false
+  xy: 2, 1792
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00033
+  rotate: false
+  xy: 701, 1763
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00034
+  rotate: false
+  xy: 2098, 1650
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00035
+  rotate: false
+  xy: 2797, 1578
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00036
+  rotate: false
+  xy: 2, 1352
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00037
+  rotate: false
+  xy: 1400, 2199
+  size: 696, 438
+  orig: 966, 748
+  offset: 123, 153
+  index: -1
+text box effect/text box effect_00038
+  rotate: true
+  xy: 3496, 1502
+  size: 696, 439
+  orig: 966, 748
+  offset: 123, 153
+  index: -1
+text box effect/text box effect_00039
+  rotate: true
+  xy: 3495, 2200
+  size: 695, 439
+  orig: 966, 748
+  offset: 123, 153
+  index: -1
+text box effect/text box effect_00040
+  rotate: false
+  xy: 701, 1323
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00041
+  rotate: false
+  xy: 1400, 330
+  size: 699, 438
+  orig: 966, 748
+  offset: 120, 153
+  index: -1
+text box effect/text box effect_00042
+  rotate: false
+  xy: 2098, 1210
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00043
+  rotate: false
+  xy: 2797, 1138
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00044
+  rotate: false
+  xy: 2, 912
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00045
+  rotate: false
+  xy: 701, 883
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00046
+  rotate: false
+  xy: 2098, 770
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00047
+  rotate: false
+  xy: 2797, 2018
+  size: 696, 438
+  orig: 966, 748
+  offset: 123, 153
+  index: -1
+text box effect/text box effect_00048
+  rotate: false
+  xy: 2797, 698
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00049
+  rotate: false
+  xy: 2, 472
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00050
+  rotate: false
+  xy: 2, 31
+  size: 697, 439
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00051
+  rotate: false
+  xy: 2098, 2530
+  size: 697, 437
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00052
+  rotate: false
+  xy: 701, 443
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00053
+  rotate: false
+  xy: 2101, 258
+  size: 698, 438
+  orig: 966, 748
+  offset: 121, 153
+  index: -1
+text box effect/text box effect_00054
+  rotate: false
+  xy: 1400, 1759
+  size: 696, 438
+  orig: 966, 748
+  offset: 123, 153
+  index: -1
+text box effect/text box effect_00055
+  rotate: false
+  xy: 1400, 1319
+  size: 696, 438
+  orig: 966, 748
+  offset: 123, 153
+  index: -1
+text box effect/text box effect_00056
+  rotate: false
+  xy: 2801, 258
+  size: 697, 438
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+text box effect/text box effect_00057
+  rotate: false
+  xy: 1400, 2639
+  size: 696, 437
+  orig: 966, 748
+  offset: 123, 153
+  index: -1
+text box effect/text box effect_00058
+  rotate: false
+  xy: 2797, 2458
+  size: 696, 437
+  orig: 966, 748
+  offset: 123, 153
+  index: -1
+text box effect/text box effect_00059
+  rotate: false
+  xy: 1400, 879
+  size: 696, 438
+  orig: 966, 748
+  offset: 123, 153
+  index: -1
+text box effect/text box effect_00060
+  rotate: false
+  xy: 701, 2
+  size: 697, 439
+  orig: 966, 748
+  offset: 122, 153
+  index: -1
+
+skeleton2.png
+size: 1908,1321
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+inner book copy
+  rotate: false
+  xy: 2, 2
+  size: 1904, 1317
+  orig: 1904, 1317
+  offset: 0, 0
+  index: -1

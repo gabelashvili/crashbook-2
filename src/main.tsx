@@ -11,25 +11,28 @@ import { WinContextProvider } from './context/win.tsx';
 import { BurnContextProvider } from './context/burn.tsx';
 import { GameProvider } from './context/game.tsx';
 import { InfoModalProvider } from './context/info-modal.tsx';
+import { JackpotContextProvider } from './context/jackpot.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <InfoModalProvider>
       <GameProvider>
         <AnimationContextProvider>
-          <OpenContextProvider>
-            <TurnContextProvider>
-              <FormulaContextProvider>
-                <WinContextProvider>
-                  <BurnContextProvider>
-                    <SignalRProvider>
-                      <App />
-                    </SignalRProvider>
-                  </BurnContextProvider>
-                </WinContextProvider>
-              </FormulaContextProvider>
-            </TurnContextProvider>
-          </OpenContextProvider>
+          <JackpotContextProvider>
+            <OpenContextProvider>
+              <TurnContextProvider>
+                <FormulaContextProvider>
+                  <WinContextProvider>
+                    <BurnContextProvider>
+                      <SignalRProvider>
+                        <App />
+                      </SignalRProvider>
+                    </BurnContextProvider>
+                  </WinContextProvider>
+                </FormulaContextProvider>
+              </TurnContextProvider>
+            </OpenContextProvider>
+          </JackpotContextProvider>
         </AnimationContextProvider>
       </GameProvider>
     </InfoModalProvider>

@@ -1,0 +1,352 @@
+skeleton.png
+size:8188,2818
+filter:Linear,Linear
+pma:true
+120
+bounds:3567,2670,291,146
+offsets:118,117,530,389
+F01
+bounds:4056,2014,491,349
+offsets:21,16,530,389
+F02
+bounds:4549,2014,491,349
+offsets:21,16,530,389
+F03
+bounds:5042,2013,491,349
+offsets:21,16,530,389
+F04
+bounds:5535,2012,491,349
+offsets:21,16,530,389
+F05
+bounds:6028,2011,491,349
+offsets:21,16,530,389
+F06
+bounds:6521,1970,491,349
+offsets:21,16,530,389
+F07
+bounds:7014,1969,491,349
+offsets:21,16,530,389
+F08
+bounds:2,1858,491,349
+offsets:21,16,530,389
+F09
+bounds:7507,1858,491,349
+offsets:21,16,530,389
+F10
+bounds:495,1857,491,349
+offsets:21,16,530,389
+F11
+bounds:988,1812,491,349
+offsets:21,16,530,389
+F12
+bounds:1481,1740,491,349
+offsets:21,16,530,389
+F13
+bounds:1974,1740,491,349
+offsets:21,16,530,389
+F14
+bounds:2467,1697,491,349
+offsets:21,16,530,389
+F15
+bounds:2960,1665,491,349
+offsets:21,16,530,389
+F16
+bounds:3453,1665,491,349
+offsets:21,16,530,389
+F17
+bounds:3946,1663,491,349
+offsets:21,16,530,389
+F18
+bounds:4439,1663,491,349
+offsets:21,16,530,389
+F19
+bounds:4932,1662,491,349
+offsets:21,16,530,389
+F20
+bounds:5425,1661,491,349
+offsets:21,16,530,389
+F21
+bounds:5918,1660,491,349
+offsets:21,16,530,389
+F22
+bounds:6411,1619,491,349
+offsets:21,16,530,389
+F23
+bounds:6904,1618,491,349
+offsets:21,16,530,389
+back glow/back glow 01
+bounds:7254,2320,194,633
+offsets:9,0,214,668
+rotate:90
+back glow/back glow 02
+bounds:2,2209,194,633
+offsets:9,34,215,667
+rotate:90
+back glow/back glow 03
+bounds:6618,2321,634,193
+offsets:0,11,668,214
+back glow/back glow 04
+bounds:637,2208,633,194
+offsets:35,11,668,215
+back glow/back glow 05
+bounds:2830,1220,567,443
+offsets:1,35,593,480
+back glow/back glow 06
+bounds:2250,1276,578,419
+offsets:28,2,608,453
+back glow/back glow 07
+bounds:2,1485,370,605
+offsets:2,27,400,633
+rotate:90
+back glow/back glow 08
+bounds:609,1436,374,606
+offsets:29,28,406,635
+rotate:90
+back glow/back glow 09
+bounds:3441,2016,347,613
+offsets:2,2,375,643
+rotate:90
+back glow/back glow 10
+bounds:3882,1170,521,491
+offsets:36,32,559,526
+back glow/back glow 11
+bounds:2479,2048,620,325
+offsets:29,25,650,353
+back glow/back glow 12
+bounds:7397,1502,614,354
+offsets:1,3,643,384
+back glow/back glow 13
+bounds:4405,1155,506,509
+offsets:2,2,539,548
+rotate:90
+back glow/back glow 14
+bounds:1217,1342,396,595
+offsets:31,1,429,623
+rotate:90
+back glow/back glow 15
+bounds:3399,1194,481,469
+offsets:13,18,518,514
+back glow/back glow 16
+bounds:7889,2209,305,297
+offsets:8,12,328,326
+rotate:90
+blust
+bounds:5606,883,782,775
+offsets:170,88,1024,981
+bonus
+bounds:1700,2696,368,120
+offsets:7,18,383,369
+bonus glow/bonus_glow_00001
+bounds:2,2727,137,89
+offsets:345,206,623,521
+bonus glow/bonus_glow_00002
+bounds:141,2714,167,102
+offsets:310,202,623,521
+bonus glow/bonus_glow_00003
+bounds:1251,2707,208,109
+offsets:266,198,623,521
+bonus glow/bonus_glow_00004
+bounds:1461,2707,237,109
+offsets:236,201,623,521
+bonus glow/bonus_glow_00005
+bounds:625,2708,275,108
+offsets:199,200,623,521
+bonus glow/bonus_glow_00006
+bounds:310,2710,313,106
+offsets:162,202,623,521
+bonus glow/bonus_glow_00007
+bounds:902,2708,347,108
+offsets:128,202,623,521
+bonus glow/bonus_glow_00008
+bounds:2070,2695,366,121
+offsets:115,188,623,521
+bonus glow/bonus_glow_00009
+bounds:2438,2688,375,128
+offsets:106,180,623,521
+bonus glow/bonus_glow_00010
+bounds:3190,2678,375,138
+offsets:104,170,623,521
+bonus glow/bonus_glow_00011
+bounds:2815,2679,373,137
+offsets:104,170,623,521
+bonus glow/bonus_glow_00012
+bounds:5843,2516,374,150
+offsets:104,157,623,521
+bonus glow/bonus_glow_00013
+bounds:2,2559,374,149
+offsets:105,157,623,521
+bonus glow/bonus_glow_00014
+bounds:6219,2516,367,150
+offsets:105,157,623,521
+bonus glow/bonus_glow_00015
+bounds:6588,2516,366,150
+offsets:105,157,623,521
+bonus glow/bonus_glow_00016
+bounds:2,2406,366,151
+offsets:105,157,623,521
+bonus glow/bonus_glow_00017
+bounds:6956,2516,376,150
+offsets:105,157,623,521
+bonus glow/bonus_glow_00018
+bounds:7334,2516,377,150
+offsets:105,157,623,521
+bonus glow/bonus_glow_00019
+bounds:378,2557,376,149
+offsets:105,157,623,521
+bonus glow/bonus_glow_00020
+bounds:3860,2668,375,148
+offsets:105,158,623,521
+bonus glow/bonus_glow_00021
+bounds:4237,2668,377,148
+offsets:105,158,623,521
+bonus glow/bonus_glow_00022
+bounds:7713,2516,378,150
+offsets:106,156,623,521
+bonus glow/bonus_glow_00023
+bounds:370,2405,380,150
+offsets:106,156,623,521
+bonus glow/bonus_glow_00024
+bounds:752,2405,380,150
+offsets:106,156,623,521
+bonus glow/bonus_glow_00025
+bounds:1134,2404,389,150
+offsets:106,156,623,521
+bonus glow/bonus_glow_00026
+bounds:756,2557,389,149
+offsets:106,157,623,521
+bonus glow/bonus_glow_00027
+bounds:1525,2393,390,150
+offsets:105,157,623,521
+bonus glow/bonus_glow_00028
+bounds:1147,2556,391,149
+offsets:104,157,623,521
+bonus glow/bonus_glow_00029
+bounds:4616,2668,391,148
+offsets:105,157,623,521
+bonus glow/bonus_glow_00030
+bounds:1540,2545,391,149
+offsets:105,157,623,521
+bonus glow/bonus_glow_00031
+bounds:1933,2544,391,149
+offsets:105,157,623,521
+bonus glow/bonus_glow_00032
+bounds:5009,2668,392,148
+offsets:104,157,623,521
+bonus glow/bonus_glow_00033
+bounds:5403,2668,391,148
+offsets:104,157,623,521
+bonus glow/bonus_glow_00034
+bounds:5796,2668,390,148
+offsets:105,157,623,521
+bonus glow/bonus_glow_00035
+bounds:6188,2668,390,148
+offsets:105,157,623,521
+bonus glow/bonus_glow_00036
+bounds:1917,2392,390,150
+offsets:105,156,623,521
+bonus glow/bonus_glow_00037
+bounds:2309,2385,390,150
+offsets:105,156,623,521
+bonus glow/bonus_glow_00038
+bounds:2701,2376,390,150
+offsets:105,156,623,521
+bonus glow/bonus_glow_00039
+bounds:3093,2375,389,150
+offsets:105,156,623,521
+bonus glow/bonus_glow_00040
+bounds:5442,2364,390,151
+offsets:104,156,623,521
+bonus glow/bonus_glow_00041
+bounds:3484,2365,390,150
+offsets:104,156,623,521
+bonus glow/bonus_glow_00042
+bounds:6226,2362,390,152
+offsets:104,156,623,521
+bonus glow/bonus_glow_00043
+bounds:5834,2363,390,151
+offsets:104,156,623,521
+bonus glow/bonus_glow_00044
+bounds:3876,2365,390,150
+offsets:104,156,623,521
+bonus glow/bonus_glow_00045
+bounds:2326,2537,390,149
+offsets:105,157,623,521
+bonus glow/bonus_glow_00046
+bounds:4268,2365,390,150
+offsets:105,157,623,521
+bonus glow/bonus_glow_00047
+bounds:4660,2365,389,150
+offsets:106,157,623,521
+bonus glow/bonus_glow_00048
+bounds:5051,2365,389,150
+offsets:106,157,623,521
+bonus glow/bonus_glow_00049
+bounds:2718,2528,389,149
+offsets:106,157,623,521
+bonus glow/bonus_glow_00050
+bounds:3109,2527,389,149
+offsets:106,157,623,521
+bonus glow/bonus_glow_00051
+bounds:3500,2517,388,149
+offsets:107,157,623,521
+bonus glow/bonus_glow_00052
+bounds:3890,2517,389,149
+offsets:107,157,623,521
+bonus glow/bonus_glow_00053
+bounds:4281,2517,389,149
+offsets:107,158,623,521
+bonus glow/bonus_glow_00054
+bounds:4672,2517,388,149
+offsets:107,158,623,521
+bonus glow/bonus_glow_00055
+bounds:5062,2517,388,149
+offsets:107,158,623,521
+bonus glow/bonus_glow_00056
+bounds:6580,2668,388,148
+offsets:107,158,623,521
+bonus glow/bonus_glow_00057
+bounds:6970,2668,389,148
+offsets:107,158,623,521
+bonus glow/bonus_glow_00058
+bounds:5452,2517,389,149
+offsets:107,158,623,521
+bonus glow/bonus_glow_00059
+bounds:7361,2668,389,148
+offsets:106,158,623,521
+bonus glow/bonus_glow_00060
+bounds:7752,2668,389,148
+offsets:106,158,623,521
+financial score glow
+bounds:1272,2163,583,228
+offsets:19,33,620,292
+financial score golden
+bounds:1857,2091,620,292
+gold page
+bounds:6390,516,984,1317
+rotate:90
+inner book copy
+bounds:2,2,1904,1317
+splash back glow
+bounds:1814,1321,434,417
+offsets:326,270,1024,981
+star 03
+bounds:3101,2046,338,327
+offsets:23,22,383,369
+text 01
+bounds:4916,1115,544,688
+offsets:53,70,620,866
+rotate:90
+
+skeleton_2.png
+size:8033,6233
+filter:Linear,Linear
+pma:true
+gliter
+bounds:2,2,8029,6229
+
+skeleton_3.png
+size:8033,6233
+filter:Linear,Linear
+pma:true
+gliter_blue
+bounds:2,2,8029,6229

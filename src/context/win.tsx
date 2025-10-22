@@ -69,23 +69,11 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
 
     const slot = spine.skeleton.findSlot('text 01');
     slot!.bone.worldX = slot!.bone.x;
+    const titleTexture = PIXI.Assets.get('currentWinning');
+    const titleSprite = new PIXI.Sprite(titleTexture);
+    titleSprite.visible = false;
 
     const bone = slot?.bone;
-
-    const labelColor = new PIXI.Color({ r: 120, g: 67, b: 0, a: 0.9 });
-
-    const label = new PIXI.Text({
-      text: 'Current Winning',
-      style: {
-        fontSize: 70,
-        fill: labelColor,
-        fontWeight: 'bold',
-        letterSpacing: 5,
-        fontFamily: 'Lexend-VariableFont_wght',
-      },
-    });
-
-    label.visible = false;
 
     const amountLabel = new PIXI.Text({
       text: winAmount,
@@ -110,12 +98,9 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
       const isSlotVisible = !!slot?.attachment?.name;
 
       if (isSlotVisible) {
-        label.visible = true;
-        const labelStartX = bone!.worldX - 350 + 50;
-        const labelEndX = bone!.worldX + 350;
-        const labelMaxWidth = labelEndX - labelStartX;
-        label.x = labelStartX + (labelMaxWidth - label.width) / 2;
-        label.y = bone!.worldY - 250;
+        titleSprite.visible = true;
+        titleSprite.x = -740;
+        titleSprite.y = bone!.worldY - 385;
         //
         amountLabel.visible = true;
 
@@ -126,7 +111,8 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
 
     animationContext.application!.ticker.add(tickerFn);
 
-    spine.addChild(label);
+    // spine.addChild(label);
+    spine.addChild(titleSprite);
     spine.addChild(amountLabel);
 
     return new Promise<void>((resolve, reject) => {

@@ -8,7 +8,14 @@ import { GifSprite, type GifSource } from 'pixi.js/gif';
 import LoadingIcon from '../components/icons/loading';
 
 type AnimationContextProps = {
-  spines: { open: Spine | null; turn: Spine | null; win: Spine | null; burn: Spine | null };
+  spines: {
+    open: Spine | null;
+    turn: Spine | null;
+    win: Spine | null;
+    burn: Spine | null;
+    jackpotLeft: Spine | null;
+    jackpotRight: Spine | null;
+  };
   setContainer: (containerRef: HTMLDivElement) => void;
   loading: boolean;
   application: PIXI.Application | null;
@@ -17,7 +24,7 @@ type AnimationContextProps = {
   setCurrentAnimation: (animation: (typeof spinesList)[number]) => void;
 };
 
-const spinesList = ['open', 'turn', 'win', 'burn'] as const;
+const spinesList = ['open', 'turn', 'win', 'burn', 'jackpotLeft', 'jackpotRight'] as const;
 const gifsList = [
   '0',
   '1',
@@ -39,7 +46,7 @@ const gifsList = [
 ] as const;
 
 const AnimationContext = createContext<AnimationContextProps>({
-  spines: { open: null, turn: null, win: null, burn: null },
+  spines: { open: null, turn: null, win: null, burn: null, jackpotLeft: null, jackpotRight: null },
   setContainer: () => {},
   loading: true,
   application: null,
@@ -85,6 +92,8 @@ const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
     turn: null,
     win: null,
     burn: null,
+    jackpotLeft: null,
+    jackpotRight: null,
   });
   const [applicationRef, setApplicationRef] = useState<PIXI.Application | null>(null);
   const currentAnimation = useRef<(typeof spinesList)[number] | null>('open');
@@ -110,6 +119,9 @@ const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
     loadedGifs.forEach((gif) => {
       new GifSprite(gif);
     });
+
+    // Load custom assets
+    await Assets.load([{ alias: 'currentWinning', src: '/spines/shared/current-winning.png' }]);
 
     const font = new FontFace('Lexend-VariableFont_wght', 'url(/fonts/Lexend-VariableFont_wght.ttf)');
     await font.load();

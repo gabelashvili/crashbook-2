@@ -22,45 +22,13 @@ const BurnContext = createContext<BurnContextProps>({
 });
 
 const showBurnTitle = (spine: PIXI.Container) => {
-  const labelColor = new PIXI.Color({ r: 120, g: 67, b: 0, a: 0.9 });
+  const titleTexture = PIXI.Assets.get('currentWinning');
+  const titleSprite = new PIXI.Sprite(titleTexture);
 
-  const label = new PIXI.Text({
-    text: 'Current Winning',
-    style: {
-      fontSize: 68,
-      fill: labelColor,
-      fontWeight: 'bold',
-      letterSpacing: 5,
-      fontFamily: 'Lexend-VariableFont_wght',
-    },
-  });
-  const label2 = new PIXI.Text({
-    text: 'Winning',
-    style: {
-      fontSize: 95,
-      fill: labelColor,
-      fontWeight: 'bold',
-      letterSpacing: 5,
-      fontFamily: 'Lexend-VariableFont_wght',
-    },
-  });
-
-  // -820
-  const startX = -808 + 40;
-  const endX = -90;
-  const distance = endX - startX;
-
-  const labelScale = Math.min(distance / label.width, 1);
-  label.scale.set(labelScale);
-
-  label.x = startX + (distance - label.width) / 2;
-  label.y = -200;
-
-  label2.x = startX + (distance - label2.width) / 2;
-  label2.y = label.y + label2.height;
-
-  spine.addChild(label);
-  // spine.addChild(label2);
+  titleSprite.x = -740;
+  titleSprite.y = -385;
+  titleSprite.visible = true;
+  spine.addChild(titleSprite);
 };
 
 const showPotentialWinAmount = (spine: PIXI.Container, amount: string) => {

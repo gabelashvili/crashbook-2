@@ -5,6 +5,8 @@ import { WinContext } from '../../context/win';
 import { SignalRContext } from '../../context/signalr';
 import { GameContext } from '../../context/game';
 import cn from '../../utils/cn';
+import { JackpotContext } from '../../context/jackpot';
+import { BurnContext } from '../../context/burn';
 
 const GameLayout = () => {
   const animationContext = useContext(AnimationContext);
@@ -12,6 +14,8 @@ const GameLayout = () => {
   const winContext = useContext(WinContext);
   const gameContext = useContext(GameContext);
   const openContext = useContext(OpenContext);
+  const jackpotContext = useContext(JackpotContext);
+  const burnContext = useContext(BurnContext);
   return (
     <div className="grid grid-rows-[1fr_minmax(0,_min-content)]  py-6 max-w-2xl aspect-[1/1.7] max-h-[850px] w-full m-auto px-2">
       <div className="relative w-full h-full flex flex-col overflow-hidden bg-[#1B092469]/60">
@@ -72,6 +76,8 @@ const GameLayout = () => {
         >
           Stop win
         </button>
+        <button onClick={() => jackpotContext.show({ duration: 5000 })}>jackpot</button>
+        <button onClick={() => burnContext.show(0.2, ['1'], '0')}>burn</button>
         <button onClick={() => gameContext?.dispatch({ type: 'SET_GAME', payload: null })}>Reset game</button>
       </div>
     </div>
