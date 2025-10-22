@@ -35,12 +35,11 @@ const GameLayout = () => {
             !gameContext?.state.game ? 'opacity-60 pointer-events-none' : ' opacity-100',
           )}
           onClick={() => {
-            console.log(winContext.isPlaying);
-            if (winContext.isPlaying) {
-              winContext.finish();
+            if (!gameContext?.state.game?.id) {
               return;
             }
-            if (!gameContext?.state.game?.id) {
+            if (winContext.isPlaying) {
+              winContext.finish();
               return;
             }
             signalRContext?.connection?.invoke('TurnThePage', { gameId: gameContext?.state.game?.id });
