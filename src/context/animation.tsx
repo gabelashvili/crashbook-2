@@ -69,16 +69,28 @@ const resizeApplication = (app: PIXI.Application, container: HTMLElement) => {
   app.renderer.resize(width, height, 2); // internal size
 };
 
-const updateSpineSizes = (spines: Spine[], container: HTMLElement) => {
+const updateSpineSizes = (spines: AnimationContextProps['spines'], container: HTMLElement) => {
+  const spinesArray = Object.values(spines).filter((spine) => spine !== null);
   const { width, height } = getContainerSizes(container);
-  const defaultSkeletonDataWidth = spines[0].skeleton.data.width;
-  const defaultSkeletonDataHeight = spines[0].skeleton.data.height;
+  const defaultSkeletonDataWidth = spines.open!.skeleton.data.width;
+  const defaultSkeletonDataHeight = spines.open!.skeleton.data.height;
   const scaleX = (width / defaultSkeletonDataWidth) * 0.99;
   const scaleY = height / defaultSkeletonDataHeight;
-  spines.forEach((spine) => {
-    spine.scale.set(scaleX, scaleY);
-    spine.x = width / 2;
-    spine.y = height / 2;
+
+  spinesArray.forEach((spine) => {
+    if (spine === spines.jackpotRight) {
+      spine.scale.set(scaleX * 1.57, scaleY);
+      spine.x = width / 2 - 70;
+      spine.y = height / 2;
+    } else if (spine === spines.jackpotLeft) {
+      spine.scale.set(scaleX, scaleY);
+      spine.x = width / 2;
+      spine.y = height / 2 + 7;
+    } else {
+      spine.scale.set(scaleX, scaleY);
+      spine.x = width / 2;
+      spine.y = height / 2;
+    }
   });
 
   return { scaleX, scaleY, width, height };
@@ -171,10 +183,7 @@ const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
   const onResize = useCallback(() => {
     if (!applicationRef || !applicationRef.canvas.parentElement?.parentElement) return;
     resizeApplication(applicationRef, applicationRef.canvas.parentElement.parentElement);
-    updateSpineSizes(
-      Object.values(spinesRef.current).filter((spine) => spine !== null),
-      applicationRef.canvas.parentElement.parentElement,
-    );
+    updateSpineSizes(spinesRef.current, applicationRef.canvas.parentElement.parentElement);
   }, [applicationRef]);
 
   const setContainer = useCallback(
