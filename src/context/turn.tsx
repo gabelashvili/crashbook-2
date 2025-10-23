@@ -1,12 +1,12 @@
 import { createContext, use, useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { AnimationContext } from './animation';
+import { GameContext } from './game';
 
 // Define the shape of your context
 type TurnContextProps = {
   show: (data: { duration?: number; onFinish?: () => void }) => Promise<void>;
   initialDuration: number;
   isTurning: boolean;
-  setOnFlipCallback: (cb: () => void) => void;
 };
 
 // Create the context with a default value (can be null)
@@ -14,7 +14,6 @@ const TurnContext = createContext<TurnContextProps>({
   show: () => Promise.resolve(),
   initialDuration: 0,
   isTurning: false,
-  setOnFlipCallback: () => {},
 });
 
 const THRESHOLD_SPEED = 0.5;
@@ -22,6 +21,7 @@ const THRESHOLD_DISTANCE = 10;
 
 // Context Provider
 const TurnContextProvider = ({ children }: { children: ReactNode }) => {
+  const gameContext = use(GameContext);
   const animationContext = use(AnimationContext);
   const spine = animationContext.spines.turn!;
   const initialDuration = spine.state.data.skeletonData.findAnimation('animation')!.duration;
@@ -31,8 +31,6 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
   const isPointerDown = useRef(false);
   const lastX = useRef(0);
   const lastTime = useRef(0);
-
-  const onFlip = useRef<() => void | null>(null);
 
   const show = async ({ duration = initialDuration, onFinish }: { duration?: number; onFinish?: () => void }) => {
     spine.removeChildren();
@@ -55,12 +53,13 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
       complete: () => {
         onFinish?.();
         spine.state.clearTracks();
+        setIsTurning(false);
       },
     };
   };
 
   const handleFlip = useCallback(() => {
-    if (!animationContext.application) return;
+    if (!animationContext.application || !gameContext?.state.game?.id) return;
     animationContext.application.canvas.addEventListener('pointerdown', (e) => {
       const canvasWidth = (e.target as HTMLCanvasElement).clientWidth;
       if (canvasWidth - e.offsetX < canvasWidth / 4) {
@@ -81,23 +80,22 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
 
       const speed = Math.abs(deltaX / deltaTime); // pixels/ms
 
-      if (Math.abs(deltaX) >= THRESHOLD_DISTANCE && speed >= THRESHOLD_SPEED && isPointerDown.current) {
-        isPointerDown.current = false;
-        onFlip?.current?.();
-      }
+      // if (Math.abs(deltaX) >= THRESHOLD_DISTANCE && speed >= THRESHOLD_SPEED && isPointerDown.current) {
+      //   isPointerDown.current = false;
+      //   // onFlip?.current?.();
+      //   if (gameContext?.state.game?.id && window.signalRConnection && spine.state.tracks.length === 0) {
+      //     window.signalRConnection?.invoke('TurnThePage', { gameId: gameContext.state.game.id });
+      //   }
+      // }
 
       lastX.current = currentX;
       lastTime.current = currentTime;
     });
-  }, [animationContext.application, onFlip]);
-
-  const setOnFlipCallback = (cb: () => void) => {
-    onFlip.current = cb;
-  };
+  }, [animationContext.application, gameContext?.state.game?.id, spine.state.tracks.length]);
 
   useEffect(() => {
     handleFlip();
-  }, [handleFlip]);
+  }, [handleFlip, gameContext?.state]);
 
   useEffect(() => {
     return () => {
@@ -112,7 +110,6 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
         show,
         initialDuration,
         isTurning,
-        setOnFlipCallback,
       }}
     >
       {children}

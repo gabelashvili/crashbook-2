@@ -24,6 +24,12 @@ interface SignalRProviderProps {
   children: ReactNode;
 }
 
+declare global {
+  interface Window {
+    signalRConnection?: TypedHubConnection;
+  }
+}
+
 const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
   const gameContext = use(GameContext)!;
   const openContext = use(OpenContext);
@@ -142,7 +148,6 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
             duration: 0.01,
             onFinish: () => {
               winContext.show(2, formatFormula(data.gameData.formula), data.gameData.potentialWin.toString());
-              turnContext.setOnFlipCallback(() => turnContext.show({ duration: 2 }));
             },
           });
         }
@@ -168,7 +173,6 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
               formatFormula(data.formula),
               data.potentialWin.toString(),
             );
-            turnContext.setOnFlipCallback(() => turnContext.show({ duration: gameContext.state.defaultWinTime * 0.3 }));
           },
         });
       });
@@ -191,7 +195,6 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
               formatFormula(data.formula),
               data.potentialWin.toString(),
             );
-            turnContext.setOnFlipCallback(() => turnContext.show({ duration: 2 }));
           },
         });
       });
@@ -203,6 +206,7 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
       });
 
       await connection.current.start();
+      window.signalRConnection = connection.current;
       connection.current.invoke('GetLeaderboard');
     } catch (error) {
       console.error('Failed to connect to SignalR:', error);
