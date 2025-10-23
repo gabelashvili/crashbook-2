@@ -13,6 +13,7 @@ export interface HubEvents {
   MultiplierUpdate: (data: MultiplierUpdate) => void;
   Burn: (data: Burn) => void;
   NewGame: (data: Game) => void;
+  JackpotWin: (data: { jackpot: number; totalWin: number }) => void;
 }
 
 export interface HubServerMethods {

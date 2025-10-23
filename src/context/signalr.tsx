@@ -11,6 +11,7 @@ import { WinContext } from './win';
 import { formatFormula } from '../utils/formula';
 import type { MultiplierUpdate } from '../types/game';
 import { BurnContext } from './burn';
+import { JackpotContext } from './jackpot';
 
 export interface SignalRContextType {
   connection: TypedHubConnection | null;
@@ -29,6 +30,7 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
   const turnContext = use(TurnContext);
   const winContext = use(WinContext);
   const burnContext = use(BurnContext);
+  const jackpotContext = use(JackpotContext);
   const infoModalContext = use(InfoModalContext);
   const [status, setStatus] = useState<'connecting' | 'connected' | 'reconnecting' | 'disconnected'>('connecting');
   const connection = useRef<TypedHubConnection | null>(null);
@@ -192,6 +194,12 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
             turnContext.setOnFlipCallback(() => turnContext.show({ duration: 2 }));
           },
         });
+      });
+
+      connection.current.on('JackpotWin', (data) => {
+        hideLoader();
+        gameContext.dispatch({ type: 'SET_GAME', payload: null });
+        jackpotContext.show(10, data.jackpot.toString());
       });
 
       await connection.current.start();

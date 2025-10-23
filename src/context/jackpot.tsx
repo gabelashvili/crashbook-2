@@ -53,7 +53,7 @@ const JackpotContextProvider = ({ children }: { children: ReactNode }) => {
   const show = (duration: number, amount: string) => {
     const start = performance.now();
     jackpotLeft.removeChildren();
-    const rightAnimationDuration = duration * 0.1;
+    const rightAnimationDuration = duration * 0.25;
     const leftAnimationDuration = duration - rightAnimationDuration;
 
     const amountText = generateAmountText(amount);
