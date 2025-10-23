@@ -80,12 +80,12 @@ const updateSpineSizes = (spines: AnimationContextProps['spines'], container: HT
   spinesArray.forEach((spine) => {
     if (spine === spines.jackpotRight) {
       spine.scale.set(scaleX * 1.57, scaleY);
-      spine.x = width / 2 - 70;
+      spine.x = width / 2 - width * 0.106;
       spine.y = height / 2;
     } else if (spine === spines.jackpotLeft) {
       spine.scale.set(scaleX, scaleY);
       spine.x = width / 2;
-      spine.y = height / 2 + 7;
+      spine.y = height / 2 + height * 0.012;
     } else {
       spine.scale.set(scaleX, scaleY);
       spine.x = width / 2;
