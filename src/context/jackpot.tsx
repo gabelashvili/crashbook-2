@@ -50,8 +50,6 @@ const JackpotContextProvider = ({ children }: { children: ReactNode }) => {
   const textSlot = jackpotLeft.skeleton.findSlot('120');
   textSlot!.color.a = 0;
 
-  //
-
   const show = (duration: number, amount: string) => {
     const start = performance.now();
     jackpotLeft.removeChildren();
