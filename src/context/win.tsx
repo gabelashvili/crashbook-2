@@ -89,7 +89,7 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
     const amountLabelEndX = bone!.worldX + 680;
     const amountLabelMaxWidth = amountLabelEndX - amountLabelStartX;
     const amountLabelScale = Math.min(amountLabelMaxWidth / amountLabel.width, 1);
-    const amountLabelStartY = bone!.worldY + 15;
+    const amountLabelStartY = bone!.worldY + 70;
     const amountLabelEndY = bone!.worldY + 210;
     const amountLabelMaxHeight = amountLabelEndY - amountLabelStartY;
     amountLabel.scale.set(amountLabelScale);
