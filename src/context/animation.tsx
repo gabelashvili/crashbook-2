@@ -86,6 +86,10 @@ const updateSpineSizes = (spines: AnimationContextProps['spines'], container: HT
       spine.scale.set(scaleX, scaleY);
       spine.x = width / 2;
       spine.y = height / 2 + height * 0.012;
+    } else if (spine === spines.burn) {
+      spine.scale.set(scaleX, scaleY * 1.1);
+      spine.x = 10;
+      spine.y = height / 2 + height * 0.012 + 25;
     } else {
       spine.scale.set(scaleX, scaleY);
       spine.x = width / 2;

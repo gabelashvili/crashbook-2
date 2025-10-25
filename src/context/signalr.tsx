@@ -177,9 +177,10 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
         });
       });
 
-      connection.current.on('Burn', (data) => {
+      connection.current.on('Burn', async (data) => {
         gameContext.dispatch({ type: 'SET_GAME', payload: null });
-        burnContext.show(gameContext.state.defaultBurnTime, formatFormula(data.formula || '1/2'), '0,00');
+        await winContext.show(gameContext.state.defaultWinTime * 0.7, formatFormula(data.formula || '1/2'), '0.00');
+        burnContext.show(gameContext.state.defaultBurnTime);
         hideLoader();
       });
 

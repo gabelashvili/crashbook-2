@@ -77,7 +77,14 @@ const GameLayout = () => {
           Stop win
         </button>
         <button onClick={() => jackpotContext.show(10, '1699.26')}>jackpot</button>
-        <button onClick={() => burnContext.show(0.2, ['1'], '0')}>burn</button>
+        <button
+          onClick={async () => {
+            await winContext.show(gameContext!.state.defaultBurnTime * 0.5, ['1', '2', '3'], '0.00');
+            burnContext.show(gameContext!.state.defaultBurnTime * 0.5);
+          }}
+        >
+          burn
+        </button>
         <button onClick={() => gameContext?.dispatch({ type: 'SET_GAME', payload: null })}>Reset game</button>
       </div>
     </div>

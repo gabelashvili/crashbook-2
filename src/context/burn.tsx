@@ -1,19 +1,9 @@
-import { createContext, use, useCallback, useEffect, type ReactNode } from 'react';
+import { createContext, use, useCallback, type ReactNode } from 'react';
 import { AnimationContext } from './animation';
-import { FormulaContext, type FormulaKey } from './formula';
-import * as PIXI from 'pixi.js';
-import { useRef } from 'react';
-
-declare global {
-  // Note the capital "W"
-  interface Window {
-    stopBurnAnimation: () => void;
-  }
-}
 
 // Define the shape of your context
 type BurnContextProps = {
-  show: (duration: number, formula: FormulaKey[], potentialWinAmount: string) => void;
+  show: (duration: number) => void;
 };
 
 // Create the context with a default value (can be null)
@@ -21,119 +11,36 @@ const BurnContext = createContext<BurnContextProps>({
   show: () => Promise.resolve(),
 });
 
-const showBurnTitle = (spine: PIXI.Container) => {
-  const titleTexture = PIXI.Assets.get('currentWinning');
-  const titleSprite = new PIXI.Sprite(titleTexture);
-
-  titleSprite.x = -740;
-  titleSprite.y = -385;
-  titleSprite.visible = true;
-  spine.addChild(titleSprite);
-};
-
-const showPotentialWinAmount = (spine: PIXI.Container, amount: string) => {
-  const amountLabel = new PIXI.Text({
-    text: amount.toString(),
-    style: {
-      fontSize: 130,
-      fontWeight: 'bold',
-      fill: new PIXI.Color({ r: 120, g: 67, b: 0, a: 1 }),
-    },
-  });
-
-  const startX = -650 + 50;
-  const endX = -270;
-  const distanceX = endX - startX;
-  const amountLabelScale = Math.min(distanceX / amountLabel.width, 1);
-
-  amountLabel.scale.set(amountLabelScale);
-  amountLabel.x = startX + (distanceX - amountLabel.width) / 2;
-
-  const startY = 20;
-  const endY = 210;
-  const distanceY = endY - startY;
-  const amountLabelY = startY + (distanceY - amountLabel.height) / 2 + 30;
-
-  amountLabel.y = amountLabelY;
-
-  spine.addChild(amountLabel);
-};
-
 // Context Provider
 const BurnContextProvider = ({ children }: { children: ReactNode }) => {
   const animationContext = use(AnimationContext);
-  const formulaContext = use(FormulaContext);
   const spine = animationContext.spines.burn!;
-  const initialDuration = spine.state.data.skeletonData.findAnimation('animation')!.duration;
+  const initialDuration = spine.state.data.skeletonData.findAnimation('animation')!.duration - 4.5;
 
-  const currentAbort = useRef<AbortController | null>(null);
-
-  const stopAnimation = useCallback(() => {
-    animationContext.spines.turn!.removeChildren();
+  const cleatAnimation = useCallback(() => {
     spine.visible = false;
-    spine.removeChildren();
+    spine.update(0.1);
     spine.state.clearTracks();
-    currentAbort.current?.abort();
-  }, [animationContext.spines.turn, spine]);
+  }, [spine]);
 
-  const show = (duration = initialDuration, formula: FormulaKey[], potentialWinAmount: string) => {
-    // Cancel previous animation if exists
-
-    stopAnimation();
-    window.stopWinAnimation?.();
+  const show = (duration = initialDuration) => {
+    cleatAnimation();
 
     if (!animationContext.spines.turn?.visible) {
       throw new Error('Turn spine is not visible');
     }
 
-    const abortController = new AbortController();
-    const { signal } = abortController;
-    currentAbort.current = abortController;
-
-    animationContext.spines.win!.visible = false;
-
-    const formulaDuration = duration * 0.25;
-    const burnDuration = duration - formulaDuration;
-
     const entry = spine.state.setAnimation(0, 'animation', false);
-    entry.timeScale = initialDuration / burnDuration;
-    entry.animationEnd = entry.animation!.duration - 1.3;
 
-    return new Promise<void>((resolve, reject) => {
-      signal.addEventListener('abort', () => {
-        // stop everything immediately
-        spine.visible = false;
-        spine.removeChildren();
-        spine.state.clearTracks();
-        animationContext.spines.turn!.removeChildren();
-        reject(new DOMException('Animation aborted', 'AbortError'));
-      });
+    entry.timeScale = initialDuration / duration;
 
-      formulaContext.show(animationContext.spines.turn!, formula, {
-        durationSec: formulaDuration,
-        onFinish: () => {
-          if (signal.aborted) return;
+    entry.trackTime = 3;
+    spine.update(0.1);
 
-          showBurnTitle(spine);
-          showPotentialWinAmount(animationContext.spines.turn!, potentialWinAmount);
-          spine.visible = true;
+    entry.animationEnd = entry.animation!.duration - 1.5;
 
-          entry.listener = {
-            complete: () => {
-              if (signal.aborted) return;
-              spine.state.clearTracks();
-              spine.update(0);
-              resolve();
-            },
-          };
-        },
-      });
-    });
+    spine.visible = true;
   };
-
-  useEffect(() => {
-    window.stopBurnAnimation = stopAnimation;
-  }, [stopAnimation]);
 
   return <BurnContext.Provider value={{ show }}>{children}</BurnContext.Provider>;
 };

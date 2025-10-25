@@ -58,7 +58,7 @@ const initialState: State = {
   game: null,
   prevGameDetails: null,
   defaultWinTime: 8,
-  defaultBurnTime: 5,
+  defaultBurnTime: 10,
   defaultOpenTime: 2,
 };
 

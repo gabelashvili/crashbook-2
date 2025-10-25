@@ -30,23 +30,22 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
   const spine = animationContext.spines.win!;
   const currentAbort = useRef<AbortController | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const lasttDataRef = useRef<{ formula: FormulaKey[]; winAmount: string } | null>(null);
 
   const stopAnimation = useCallback(() => {
+    formulaContext.finish();
+    animationContext.spines.burn!.visible = false;
     currentAbort.current?.abort();
     setIsPlaying(false);
     spine.removeChildren();
     spine.visible = false;
     spine.state.clearTracks();
-  }, [spine]);
+  }, [animationContext.spines.burn, formulaContext, spine]);
 
   const show = (duration: number, formula: FormulaKey[], winAmount: string) => {
     // Cancel any previous animation
 
-    currentAbort.current?.abort();
-    window.stopBurnAnimation?.();
+    stopAnimation();
     setIsPlaying(true);
-    lasttDataRef.current = { formula, winAmount };
 
     if (!animationContext.spines.turn?.visible) {
       throw new Error('Turn spine is not visible');
@@ -89,7 +88,7 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
     const amountLabelEndX = bone!.worldX + 680;
     const amountLabelMaxWidth = amountLabelEndX - amountLabelStartX;
     const amountLabelScale = Math.min(amountLabelMaxWidth / amountLabel.width, 1);
-    const amountLabelStartY = bone!.worldY + 70;
+    const amountLabelStartY = bone!.worldY + 90;
     const amountLabelEndY = bone!.worldY + 210;
     const amountLabelMaxHeight = amountLabelEndY - amountLabelStartY;
     amountLabel.scale.set(amountLabelScale);
