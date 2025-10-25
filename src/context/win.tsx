@@ -44,7 +44,8 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
   const show = (duration: number, formula: FormulaKey[], winAmount: string) => {
     // Cancel any previous animation
 
-    stopAnimation();
+    currentAbort.current?.abort();
+    // stopAnimation();
     setIsPlaying(true);
 
     if (!animationContext.spines.turn?.visible) {
@@ -59,7 +60,7 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
     const entry = spine.state.setAnimation(0, 'animation', false);
     spine.update(6.6);
     entry.timeScale = 0;
-    entry.animationEnd = entry.animation!.duration - 3.2;
+    entry.animationEnd = entry.animation!.duration - 1.7;
 
     const formulaDuration = duration * 0.3;
     const spineDuration = duration - formulaDuration;

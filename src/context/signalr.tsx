@@ -179,8 +179,15 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
 
       connection.current.on('Burn', async (data) => {
         gameContext.dispatch({ type: 'SET_GAME', payload: null });
-        await winContext.show(gameContext.state.defaultWinTime * 0.7, formatFormula(data.formula || '1/2'), '0.00');
-        burnContext.show(gameContext.state.defaultBurnTime);
+        winContext.setIsPlaying(true);
+        turnContext.show({
+          duration: gameContext.state.defaultWinTime * 0.3,
+          onFinish: async () => {
+            await winContext.show(gameContext.state.defaultWinTime * 0.5, formatFormula(data.formula || '1/2'), '0.00');
+            burnContext.show(gameContext.state.defaultBurnTime * 0.5);
+          },
+        });
+
         hideLoader();
       });
 
