@@ -88,6 +88,10 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
       if (Math.abs(deltaX) >= THRESHOLD_DISTANCE && speed >= THRESHOLD_SPEED && isPointerDown.current) {
         isPointerDown.current = false;
         // onFlip?.current?.();
+        if (window.isWinPlaying) {
+          window.finsihWinAnimation();
+          return;
+        }
         if (window.signalRConnection && spine.state.tracks.length === 0 && !window.isWinPlaying && gameIdRef.current) {
           window.signalRConnection?.invoke('TurnThePage', { gameId: gameIdRef.current });
         }
