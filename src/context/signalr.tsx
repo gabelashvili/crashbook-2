@@ -162,9 +162,9 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
       });
 
       connection.current.on('MultiplierUpdate', (data: MultiplierUpdate) => {
+        winContext.setIsPlaying(true);
         hideLoader();
         gameContext.dispatch({ type: 'UPDATE_MULTIPLIER', payload: data });
-        winContext.setIsPlaying(true);
         turnContext.show({
           duration: gameContext.state.defaultWinTime * 0.3,
           onFinish: () => {

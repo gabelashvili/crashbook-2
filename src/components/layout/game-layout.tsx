@@ -16,6 +16,7 @@ const GameLayout = () => {
   const openContext = useContext(OpenContext);
   const jackpotContext = useContext(JackpotContext);
   const burnContext = useContext(BurnContext);
+
   return (
     <div className="grid grid-rows-[1fr_minmax(0,_min-content)]  py-6 max-w-2xl aspect-[1/1.7] max-h-[850px] w-full m-auto px-2">
       <div className="relative w-full h-full flex flex-col overflow-hidden bg-[#1B092469]/60">
@@ -39,14 +40,16 @@ const GameLayout = () => {
             !gameContext?.state.game ? 'opacity-60 pointer-events-none' : ' opacity-100',
           )}
           onClick={() => {
-            if (!gameContext?.state.game?.id) {
-              return;
-            }
-            if (winContext.isPlaying) {
-              winContext.finish();
-              return;
-            }
-            signalRContext?.connection?.invoke('TurnThePage', { gameId: gameContext?.state.game?.id });
+            setTimeout(() => {
+              if (!gameContext?.state.game?.id) {
+                return;
+              }
+              if (winContext.isPlaying) {
+                winContext.finish();
+                return;
+              }
+              signalRContext?.connection?.invoke('TurnThePage', { gameId: gameContext?.state.game?.id });
+            }, 0);
           }}
         >
           <img src="/src/assets/images/next.png" alt="flip-next" className="w-[80%] h-[30px] md:h-[40px]" />
@@ -64,17 +67,6 @@ const GameLayout = () => {
           }}
         >
           Create Game
-        </button>
-        <button
-          onClick={() => {
-            if (winContext.isPlaying) {
-              winContext.finish();
-            } else {
-              // console.log('win is not playing');
-            }
-          }}
-        >
-          Stop win
         </button>
         <button onClick={() => jackpotContext.show(10, '1699.26')}>jackpot</button>
         <button

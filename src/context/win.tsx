@@ -7,19 +7,21 @@ declare global {
   // Note the capital "W"
   interface Window {
     stopWinAnimation: () => void;
+    finsihWinAnimation: () => void;
+    isWinPlaying: boolean;
   }
 }
 
 type WinContextProps = {
   show: (duration: number, formula: FormulaKey[], winAmount: string) => Promise<void>;
-  finish: () => void;
+  finish: () => Promise<void>;
   isPlaying: boolean;
   setIsPlaying: (isPlaying: boolean) => void;
 };
 
 const WinContext = createContext<WinContextProps>({
   show: () => Promise.resolve(),
-  finish: () => {},
+  finish: () => Promise.resolve(),
   isPlaying: false,
   setIsPlaying: () => {},
 });
@@ -145,26 +147,34 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const finish = () => {
+  const finish = useCallback(async () => {
     const turnSpine = animationContext.spines.turn;
     const turnSpineEntry = turnSpine?.state.tracks[0];
     if (turnSpineEntry) {
-      turnSpineEntry.timeScale = 10;
+      turnSpineEntry.timeScale = 7;
     }
+    await new Promise((resolve) => setTimeout(resolve, 200));
 
-    setTimeout(() => {
-      formulaContext.finish();
-      setIsPlaying(false);
-      const lastEntry = spine.state.tracks[0];
-      if (lastEntry) {
-        lastEntry.timeScale = 15;
-      }
-    }, 200);
-  };
+    formulaContext.finish();
+
+    const lastEntry = spine.state.tracks[0];
+    if (lastEntry) {
+      lastEntry.timeScale = 7;
+    }
+    setIsPlaying(false);
+  }, [animationContext.spines.turn, formulaContext, spine]);
 
   useEffect(() => {
     window.stopWinAnimation = stopAnimation;
   }, [stopAnimation]);
+
+  useEffect(() => {
+    window.finsihWinAnimation = finish;
+  }, [finish]);
+
+  useEffect(() => {
+    window.isWinPlaying = isPlaying;
+  }, [isPlaying]);
 
   return <WinContext.Provider value={{ show, finish, isPlaying, setIsPlaying }}>{children}</WinContext.Provider>;
 };

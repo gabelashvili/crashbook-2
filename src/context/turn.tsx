@@ -22,6 +22,7 @@ const THRESHOLD_DISTANCE = 10;
 // Context Provider
 const TurnContextProvider = ({ children }: { children: ReactNode }) => {
   const gameContext = use(GameContext);
+  const gameIdRef = useRef<number | null>(null);
   const animationContext = use(AnimationContext);
   const spine = animationContext.spines.turn!;
   const initialDuration = spine.state.data.skeletonData.findAnimation('animation')!.duration;
@@ -53,16 +54,20 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
       complete: () => {
         onFinish?.();
         spine.state.clearTracks();
-        setIsTurning(false);
+        // setIsTurning(false);
       },
     };
   };
 
   const handleFlip = useCallback(() => {
-    if (!animationContext.application || !gameContext?.state.game?.id) return;
+    if (!animationContext.application) return;
     animationContext.application.canvas.addEventListener('pointerdown', (e) => {
       const canvasWidth = (e.target as HTMLCanvasElement).clientWidth;
       if (canvasWidth - e.offsetX < canvasWidth / 4) {
+        if (window.isWinPlaying) {
+          window.finsihWinAnimation();
+          return;
+        }
         isPointerDown.current = true;
       }
     });
@@ -80,18 +85,18 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
 
       const speed = Math.abs(deltaX / deltaTime); // pixels/ms
 
-      // if (Math.abs(deltaX) >= THRESHOLD_DISTANCE && speed >= THRESHOLD_SPEED && isPointerDown.current) {
-      //   isPointerDown.current = false;
-      //   // onFlip?.current?.();
-      //   if (gameContext?.state.game?.id && window.signalRConnection && spine.state.tracks.length === 0) {
-      //     window.signalRConnection?.invoke('TurnThePage', { gameId: gameContext.state.game.id });
-      //   }
-      // }
+      if (Math.abs(deltaX) >= THRESHOLD_DISTANCE && speed >= THRESHOLD_SPEED && isPointerDown.current) {
+        isPointerDown.current = false;
+        // onFlip?.current?.();
+        if (window.signalRConnection && spine.state.tracks.length === 0 && !window.isWinPlaying && gameIdRef.current) {
+          window.signalRConnection?.invoke('TurnThePage', { gameId: gameIdRef.current });
+        }
+      }
 
       lastX.current = currentX;
       lastTime.current = currentTime;
     });
-  }, [animationContext.application, gameContext?.state.game?.id, spine.state.tracks.length]);
+  }, [animationContext.application, spine.state.tracks.length]);
 
   useEffect(() => {
     handleFlip();
@@ -104,6 +109,11 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    gameIdRef.current = gameContext?.state.game?.id ?? null;
+  }, [gameContext?.state.game?.id]);
+
   return (
     <TurnContext.Provider
       value={{

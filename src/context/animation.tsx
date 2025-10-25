@@ -20,8 +20,6 @@ type AnimationContextProps = {
   loading: boolean;
   application: PIXI.Application | null;
   hideAllSpines: () => void;
-  currentAnimation: (typeof spinesList)[number] | null;
-  setCurrentAnimation: (animation: (typeof spinesList)[number]) => void;
 };
 
 const spinesList = ['open', 'turn', 'win', 'burn', 'jackpotLeft', 'jackpotRight'] as const;
@@ -51,8 +49,6 @@ const AnimationContext = createContext<AnimationContextProps>({
   loading: true,
   application: null,
   hideAllSpines: () => {},
-  currentAnimation: null,
-  setCurrentAnimation: () => {},
 });
 
 // Get real container sizes
@@ -112,7 +108,6 @@ const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
     jackpotRight: null,
   });
   const [applicationRef, setApplicationRef] = useState<PIXI.Application | null>(null);
-  const currentAnimation = useRef<(typeof spinesList)[number] | null>('open');
 
   const loadSpinesAssets = useCallback(async () => {
     const loadedAssets = await PIXI.Assets.load(
@@ -205,10 +200,6 @@ const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
     });
   }, []);
 
-  const setCurrentAnimation = useCallback((animation: (typeof spinesList)[number]) => {
-    currentAnimation.current = animation;
-  }, []);
-
   useEffect(() => {
     loadAssets();
   }, [loadAssets]);
@@ -229,8 +220,6 @@ const AnimationContextProvider = ({ children }: { children: ReactNode }) => {
         loading,
         application: applicationRef,
         hideAllSpines,
-        currentAnimation: currentAnimation.current,
-        setCurrentAnimation,
       }}
     >
       {loading ? (
