@@ -139,7 +139,7 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
         });
       });
 
-      connection.current.on('GameData', (data) => {
+      connection.current.on('GameData', async (data) => {
         gameContext.dispatch({ type: 'SET_USER', payload: data.user });
         if (!data.gameData) {
           openContext.show({ showIddle: true });
@@ -148,7 +148,7 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
         if (data.gameData) {
           gameContext.dispatch({ type: 'SET_GAME', payload: data.gameData });
           turnContext.show({
-            duration: 0.01,
+            duration: 0.001,
             onFinish: () => {
               winContext.show(2, formatFormula(data.gameData.formula), data.gameData.potentialWin.toString());
             },
