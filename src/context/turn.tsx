@@ -76,7 +76,7 @@ const TurnContextProvider = ({ children }: { children: ReactNode }) => {
       isPointerDown.current = false;
     });
 
-    animationContext.application.canvas.addEventListener('mousemove', (e) => {
+    animationContext.application.canvas.addEventListener('pointermove', (e) => {
       const currentX = e.x;
       const currentTime = performance.now();
 
