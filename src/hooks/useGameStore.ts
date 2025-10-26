@@ -17,9 +17,9 @@ type State = {
   defaultBurnTime: number;
   defaultOpenTime: number;
   autoPlayEventsTimes: {
-    turnTime: 2000;
-    nextGameDelay: 4000;
-    NextGameDelayOnBurn: 4000;
+    turnTime: number;
+    nextGameDelay: number;
+    NextGameDelayOnBurn: number;
   };
   betAmounts: number[];
   autoPlayOptions: {
