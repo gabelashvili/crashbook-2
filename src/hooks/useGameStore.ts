@@ -31,7 +31,7 @@ type State = {
   autoPlayInfo: {
     currentGame: number;
     totalGames: number;
-  };
+  } | null;
 };
 
 // Action types as discriminated union
@@ -103,6 +103,7 @@ const initialState: State = {
     nextGameDelay: 4000,
     NextGameDelayOnBurn: 4000,
   },
+  autoPlayInfo: null,
 };
 
 // Hook
