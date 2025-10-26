@@ -43,6 +43,7 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
   const [status, setStatus] = useState<'connecting' | 'connected' | 'reconnecting' | 'disconnected'>('connecting');
   const connection = useRef<TypedHubConnection | null>(null);
   const lastPageTurnTime = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const gamePlayedRef = useRef<number>(0);
 
   /// TODO: if hackpot happen hide loader
 
@@ -152,6 +153,7 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
               winContext.show(2, formatFormula(data.gameData.formula), data.gameData.potentialWin.toString());
             },
           });
+          gameContext.dispatch({ type: 'UPDATE_GAME_PLAYED' });
         }
       });
 
@@ -180,11 +182,13 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
       });
 
       connection.current.on('Burn', async (data) => {
+        console.log('shemovida', data);
         gameContext.dispatch({ type: 'SET_GAME', payload: null });
         winContext.setIsPlaying(true);
         turnContext.show({
           duration: gameContext.state.defaultWinTime * 0.3,
           onFinish: async () => {
+            console.log('burn daiwyoo');
             await winContext.show(gameContext.state.defaultWinTime * 0.5, formatFormula(data.formula || '1/2'), '0.00');
             await burnContext.show(gameContext.state.defaultBurnTime * 0.5);
             await placeNextBetContext.show(2.5);
@@ -196,11 +200,13 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
 
       connection.current.on('NewGame', (data) => {
         hideLoader();
-        gameContext.dispatch({ type: 'SET_GAME', payload: data });
-        gameContext.dispatch({ type: 'UPDATE_GAME_PLAYED' });
+        window.removeWinAnimation?.();
+        window.removeBurnAnimation?.();
+        window.removePlaceNextBetAnimation?.();
+        window.removeJackpotAnimation?.();
 
         turnContext.show({
-          duration: 0.01,
+          duration: gamePlayedRef.current === 0 ? 0.01 : 1,
           onFinish: () => {
             winContext.show(
               gameContext.state.defaultWinTime * 0.7,
@@ -209,6 +215,9 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
             );
           },
         });
+
+        gameContext.dispatch({ type: 'SET_GAME', payload: data });
+        gameContext.dispatch({ type: 'UPDATE_GAME_PLAYED' });
       });
 
       connection.current.on('JackpotWin', async (data) => {
@@ -238,6 +247,10 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
       }
     };
   }, [createConnection]);
+
+  useEffect(() => {
+    gamePlayedRef.current = gameContext.state.gamePlayed;
+  }, [gameContext.state.gamePlayed]);
 
   const value: SignalRContextType = {
     connection: connection.current,

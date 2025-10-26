@@ -1,8 +1,14 @@
-import { createContext, use, useRef, type ReactNode, useState } from 'react';
+import { createContext, use, useRef, type ReactNode, useState, useCallback, useEffect } from 'react';
 import { AnimationContext } from './animation';
 import { TurnContext } from './turn';
 import * as PIXI from 'pixi.js';
 import gsap from 'gsap';
+
+declare global {
+  interface Window {
+    removePlaceNextBetAnimation: () => void;
+  }
+}
 
 type PlaceNextBetContextProps = {
   show: (duration: number) => Promise<void>;
@@ -58,6 +64,12 @@ const PlaceNextBetContextProvider = ({ children }: { children: ReactNode }) => {
   const currentAbort = useRef<AbortController | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const removePlaceNextBetAnimation = useCallback(() => {
+    currentAbort.current?.abort();
+    currentAbort.current = null;
+    setIsPlaying(false);
+  }, []);
+
   const show = async (duration: number = 1.5): Promise<void> => {
     if (!animationContext.spines.turn?.visible) {
       throw new Error('Turn spine is not visible');
@@ -79,6 +91,10 @@ const PlaceNextBetContextProvider = ({ children }: { children: ReactNode }) => {
       });
     });
   };
+
+  useEffect(() => {
+    window.removePlaceNextBetAnimation = removePlaceNextBetAnimation;
+  }, [removePlaceNextBetAnimation]);
 
   return <PlaceNextBetContext.Provider value={{ show, isPlaying }}>{children}</PlaceNextBetContext.Provider>;
 };

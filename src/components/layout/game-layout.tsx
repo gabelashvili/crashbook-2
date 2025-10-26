@@ -11,6 +11,7 @@ const GameLayout = () => {
   const signalRContext = useContext(SignalRContext);
   const winContext = useContext(WinContext);
   const gameContext = useContext(GameContext)!;
+
   return (
     <div className="grid grid-rows-[1fr_minmax(0,_min-content)]  py-6 max-w-2xl aspect-[1/1.7] max-h-[850px] w-full m-auto px-2">
       <div className="relative w-full h-full flex flex-col overflow-hidden bg-[#1B092469]/60">

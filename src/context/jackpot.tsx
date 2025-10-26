@@ -1,6 +1,12 @@
-import { createContext, use, useRef, type ReactNode } from 'react';
+import { createContext, use, useCallback, useEffect, useRef, type ReactNode } from 'react';
 import { AnimationContext } from './animation';
 import * as PIXI from 'pixi.js';
+
+declare global {
+  interface Window {
+    removeJackpotAnimation: () => void;
+  }
+}
 
 // Define the shape of your context
 type JackpotContextProps = {
@@ -48,10 +54,26 @@ const JackpotContextProvider = ({ children }: { children: ReactNode }) => {
   const jackpotLeftInitialDuration = jackpotLeft.state.data.skeletonData.findAnimation('animation')!.duration;
   const jackpotRightInitialDuration = 2.5;
   const textSlot = jackpotLeft.skeleton.findSlot('120');
+  const abortController = useRef<AbortController | null>(null);
   textSlot!.color.a = 0;
 
+  const removeJackpotAnimation = useCallback(() => {
+    abortController.current?.abort();
+    jackpotLeft.visible = false;
+    jackpotRight.visible = false;
+    jackpotLeft.removeChildren();
+    jackpotRight.removeChildren();
+    animationContext.application?.ticker.remove(tickerFnRef.current);
+  }, [animationContext.application?.ticker, jackpotLeft, jackpotRight]);
+
   const show = (duration: number, amount: string): Promise<void> => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
+      abortController.current = new AbortController();
+      if (abortController.current?.signal.aborted) {
+        removeJackpotAnimation();
+        reject(new DOMException('Jackpot animation aborted', 'AbortError'));
+        return;
+      }
       jackpotLeft.removeChildren();
       const rightAnimationDuration = duration * 0.25;
       const leftAnimationDuration = duration - rightAnimationDuration;
@@ -74,6 +96,12 @@ const JackpotContextProvider = ({ children }: { children: ReactNode }) => {
       jackpotRightEntry.animationEnd = 6;
       jackpotRightEntry.listener = {
         complete: () => {
+          console.log('jackpotRightEntry complete', abortController.current?.signal.aborted);
+          if (abortController.current?.signal.aborted) {
+            removeJackpotAnimation();
+            reject(new DOMException('Jackpot animation aborted', 'AbortError'));
+            return;
+          }
           jackpotRight.state.clearTracks();
           jackpotLeft.visible = true;
           jackpotLeftEntry.timeScale = jackpotLeftInitialDuration / leftAnimationDuration;
@@ -91,6 +119,11 @@ const JackpotContextProvider = ({ children }: { children: ReactNode }) => {
 
       jackpotLeftEntry.listener = {
         complete: () => {
+          if (abortController.current?.signal.aborted) {
+            removeJackpotAnimation();
+            reject(new DOMException('Jackpot animation aborted', 'AbortError'));
+            return;
+          }
           resolve();
           jackpotLeft.state.clearTracks();
           animationContext.application?.ticker.remove(tickerFnRef.current);
@@ -98,6 +131,10 @@ const JackpotContextProvider = ({ children }: { children: ReactNode }) => {
       };
     });
   };
+
+  useEffect(() => {
+    window.removeJackpotAnimation = removeJackpotAnimation;
+  }, [removeJackpotAnimation]);
   return (
     <JackpotContext.Provider
       value={{

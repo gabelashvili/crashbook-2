@@ -6,7 +6,7 @@ import * as PIXI from 'pixi.js';
 declare global {
   // Note the capital "W"
   interface Window {
-    stopWinAnimation: () => void;
+    removeWinAnimation: () => void;
     finsihWinAnimation: () => void;
     isWinPlaying: boolean;
   }
@@ -33,7 +33,7 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
   const currentAbort = useRef<AbortController | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const stopAnimation = useCallback(() => {
+  const removeWinAnimation = useCallback(() => {
     formulaContext.finish();
     animationContext.spines.burn!.visible = false;
     currentAbort.current?.abort();
@@ -47,7 +47,7 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
     // Cancel any previous animation
 
     currentAbort.current?.abort();
-    // stopAnimation();
+    // removeWinAnimation();
     setIsPlaying(true);
 
     if (!animationContext.spines.turn?.visible) {
@@ -165,8 +165,8 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
   }, [animationContext.spines.turn, formulaContext, spine]);
 
   useEffect(() => {
-    window.stopWinAnimation = stopAnimation;
-  }, [stopAnimation]);
+    window.removeWinAnimation = removeWinAnimation;
+  }, [removeWinAnimation]);
 
   useEffect(() => {
     window.finsihWinAnimation = finish;
@@ -174,7 +174,8 @@ const WinContextProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     window.isWinPlaying = isPlaying;
-  }, [isPlaying]);
+    window.removeWinAnimation = removeWinAnimation;
+  }, [isPlaying, removeWinAnimation]);
 
   return <WinContext.Provider value={{ show, finish, isPlaying, setIsPlaying }}>{children}</WinContext.Provider>;
 };

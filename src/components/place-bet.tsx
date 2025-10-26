@@ -16,7 +16,7 @@ const PlaceBet = () => {
 
   const createGame = async () => {
     setIsLoading(true);
-    if (!gameContext.state.prevGameDetails) {
+    if (gameContext.state.gamePlayed === 0) {
       openContext.show({ duration: 2.5 });
       await new Promise((resolve) => setTimeout(resolve, 2500));
       signalRContext?.connection?.invoke('CreateGame', {
