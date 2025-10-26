@@ -1,5 +1,5 @@
 
-skeleton.png
+skeleton.webp
 size: 4021,4072
 format: RGBA8888
 filter: Linear,Linear
@@ -431,16 +431,12 @@ text box effect/text box effect_00060
   orig: 966, 748
   offset: 122, 153
   index: -1
-
-skeleton2.png
-size: 1908,1321
-format: RGBA8888
-filter: Linear,Linear
-repeat: none
 inner book copy
   rotate: false
   xy: 2, 2
-  size: 1904, 1317
-  orig: 1904, 1317
+  size: 0, 0
+  orig: 0, 0
   offset: 0, 0
   index: -1
+
+
