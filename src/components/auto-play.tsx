@@ -26,7 +26,7 @@ const AutoPlay = () => {
   }, [onClickOutside]);
 
   return (
-    <div className="flex items-center gap-2  rounded-sm py-1.5 px-2">
+    <div className="flex items-center gap-1 sm:gap-2  rounded-sm py-1.5 px-2">
       <div className="relative" id="auto-play-switch">
         <Switch
           labelClassName="w-max sm:text-sm xl:text-base"
@@ -80,7 +80,7 @@ const AutoPlay = () => {
         </div>
       </div>
       <div
-        className={cn('flex items-center gap-2 bg-[#1E0D487A] p-2 rounded-sm ml-auto', {
+        className={cn('flex items-center gap-2 bg-[#1E0D487A] px-1 py-2 sm:p-2 rounded-sm ml-auto', {
           'pointer-events-none opacity-60': !gameContext?.state.autoPlayOptions?.autoPlay,
         })}
       >
@@ -104,12 +104,12 @@ const AutoPlay = () => {
             }
           }}
         />
-        <div className="flex gap-2">
+        <div className="flex gap-1 sm:gap-2">
           {gameContext?.state.autoCashoutValues.map((value) => (
             <div
               key={value}
               className={cn(
-                'w-9 h-9 min-w-9 min-h-9 user-select-none shadow-[inset_0_4px_4px_0_#0000004D] cursor-pointer bg-[#2A1244] border border-[#582FB6] rounded-sm p-1.5 flex items-center justify-center text-sm text-[#ACACAC] md:text-base font-semibold',
+                'w-7 h-7 min-w-7 min-h-7 sm:w-8 sm:h-8 sm:min-w-8 sm:min-h-8 user-select-none shadow-[inset_0_4px_4px_0_#0000004D] cursor-pointer bg-[#2A1244] border border-[#582FB6] rounded-sm p-1.5 flex items-center justify-center text-xs sm:text-sm text-[#ACACAC] md:text-base font-semibold',
                 {
                   'bg-[#814FFC] text-white': gameContext.state.autoPlayOptions?.autoCashout === value,
                 },

@@ -67,7 +67,7 @@ const Header = () => {
           setOpenLeaderboard(false);
         }}
       />
-      <div className="bg-[rgba(84,45,178,0.46)] flex justify-between items-center py-1 px-6 w-full">
+      <div className="bg-[rgba(84,45,178,0.46)] flex justify-between items-center py-1 px-6 w-full z-20">
         <h1 className="text-base md:text-lg lg:text-xl font-semibold text-white">Crashbook</h1>
         <div className="flex items-center gap-4">
           <img
