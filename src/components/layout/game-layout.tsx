@@ -5,11 +5,13 @@ import { SignalRContext } from '../../context/signalr';
 import { GameContext } from '../../context/game';
 import cn from '../../utils/cn';
 import PlaceBet from '../place-bet';
+import { OpenContext } from '../../context/open';
 
 const GameLayout = () => {
   const animationContext = useContext(AnimationContext);
   const signalRContext = useContext(SignalRContext);
   const winContext = useContext(WinContext);
+  const openContext = useContext(OpenContext);
   const gameContext = useContext(GameContext)!;
 
   return (
@@ -32,7 +34,7 @@ const GameLayout = () => {
           id="flip-next"
           className={cn(
             'w-full h-[50px] min-h-[50px] md:min-h-[70px] flex items-center justify-center cursor-pointer',
-            !gameContext?.state.game ? 'opacity-60 pointer-events-none' : 'opacity-100',
+            !gameContext?.state.game || openContext.isPlaying ? 'opacity-60 pointer-events-none' : 'opacity-100',
           )}
           onClick={() => {
             setTimeout(() => {

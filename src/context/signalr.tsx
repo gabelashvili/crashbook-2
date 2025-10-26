@@ -233,9 +233,9 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
           openContext.show({ duration: 2.5 });
           await new Promise((resolve) => setTimeout(resolve, 2500));
           turnContext.show({
-            duration: 1,
+            duration: 0.001,
             onFinish: () => {
-              winContext.show(2, formatFormula(data.formula), data.potentialWin.toString());
+              winContext.show(4, formatFormula(data.formula), data.potentialWin.toString());
             },
           });
         }

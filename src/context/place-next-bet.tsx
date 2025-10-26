@@ -77,6 +77,11 @@ const PlaceNextBetContextProvider = ({ children }: { children: ReactNode }) => {
     return new Promise((resolve) => {
       currentAbort.current = new AbortController();
       setIsPlaying(true);
+      const previousEntry = animationContext.spines.turn?.state.tracks[0];
+      if (previousEntry) {
+        previousEntry.timeScale = 5;
+        animationContext.spines.turn!.state.clearTracks();
+      }
       turnContext.show({
         duration: duration * 0.7,
         onFinish: () => {
