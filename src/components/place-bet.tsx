@@ -6,27 +6,29 @@ import Button from './ui/button';
 import cn from '../utils/cn';
 import { SignalRContext } from '../context/signalr';
 import LoadingIcon from './icons/loading';
-import { OpenContext } from '../context/open';
 
 const PlaceBet = () => {
   const [isLoading, setIsLoading] = useState(false);
   const gameContext = use(GameContext)!;
   const signalRContext = use(SignalRContext);
-  const openContext = use(OpenContext);
 
   const createGame = async () => {
     setIsLoading(true);
     if (gameContext.state.gamePlayed === 0) {
-      openContext.show({ duration: 2.5 });
-      await new Promise((resolve) => setTimeout(resolve, 2500));
       signalRContext?.connection?.invoke('CreateGame', {
-        betAmount: gameContext.state.betAmount * 1000,
+        betAmount: gameContext.state.betAmount * 100,
       });
     } else {
       signalRContext?.connection?.invoke('CreateGame', {
-        betAmount: gameContext.state.betAmount * 1000,
+        betAmount: gameContext.state.betAmount * 100,
       });
     }
+  };
+
+  const cashout = async () => {
+    signalRContext?.connection?.invoke('Cashout', {
+      gameId: gameContext.state.game!.id,
+    });
   };
 
   useEffect(() => {
@@ -126,32 +128,63 @@ const PlaceBet = () => {
                   ))}
                 </div>
               </div>
-              <Button
-                className={cn('space-y-0.5 relative', {
-                  'opacity-60 pointer-events-none': isLoading,
-                })}
-                onClick={createGame}
-              >
-                {isLoading && (
-                  <LoadingIcon className="size-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-spin text-[#ACACAC]" />
-                )}
-                <p
-                  className={cn('text-white text-xs md:text-sm font-semibold', {
-                    'opacity-0': isLoading,
+              {!gameContext.state.game && (
+                <Button
+                  className={cn(' relative', {
+                    'opacity-60 pointer-events-none': isLoading,
                   })}
+                  onClick={createGame}
                 >
-                  BET
-                </p>
-                <p
-                  className={cn('text-white  font-semibold', {
-                    'text-base sm:text-xl': gameContext.state.betAmount.toString().length <= 6,
-                    'text-sm sm:text-lg': gameContext.state.betAmount.toString().length > 6,
-                    'opacity-0': isLoading,
+                  {isLoading && (
+                    <LoadingIcon className="size-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-spin text-[#ACACAC]" />
+                  )}
+                  <p
+                    className={cn('text-white text-xs md:text-sm font-semibold', {
+                      'opacity-0': isLoading,
+                    })}
+                  >
+                    BET
+                  </p>
+                  <p
+                    className={cn('text-white  font-semibold', {
+                      'text-base sm:text-xl': gameContext.state.betAmount.toString().length <= 6,
+                      'text-sm sm:text-lg': gameContext.state.betAmount.toString().length > 6,
+                      'opacity-0': isLoading,
+                    })}
+                  >
+                    {formatCurrency(gameContext!.state.betAmount)} GEL
+                  </p>
+                </Button>
+              )}
+              {gameContext.state.game && (
+                <Button
+                  className={cn(' relative', {
+                    'opacity-60 pointer-events-none': isLoading,
                   })}
+                  variant={'secondary'}
+                  onClick={cashout}
                 >
-                  {formatCurrency(gameContext!.state.betAmount)} GEL
-                </p>
-              </Button>
+                  {isLoading && (
+                    <LoadingIcon className="size-10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-spin text-[#ACACAC]" />
+                  )}
+                  <p
+                    className={cn('text-white text-xs md:text-sm font-semibold', {
+                      'opacity-0': isLoading,
+                    })}
+                  >
+                    CASHOUT
+                  </p>
+                  <p
+                    className={cn('text-white  font-semibold', {
+                      'text-base sm:text-xl': gameContext.state.betAmount.toString().length <= 6,
+                      'text-sm sm:text-lg': gameContext.state.betAmount.toString().length > 6,
+                      'opacity-0': isLoading,
+                    })}
+                  >
+                    {formatCurrency(gameContext!.state.game.betAmount * gameContext!.state.game.multiplier)} GEL
+                  </p>
+                </Button>
+              )}
             </div>
           </div>
         </div>

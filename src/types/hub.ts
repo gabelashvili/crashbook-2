@@ -14,6 +14,7 @@ export interface HubEvents {
   Burn: (data: Burn) => void;
   NewGame: (data: Game) => void;
   JackpotWin: (data: { jackpot: number; totalWin: number }) => void;
+  Win: (data: { multiplier: number; winAmount: number; gameHash: string; resultToken: string }) => void;
 }
 
 export interface HubServerMethods {
@@ -23,6 +24,9 @@ export interface HubServerMethods {
     betAmount: number;
   };
   TurnThePage: {
+    gameId: number;
+  };
+  Cashout: {
     gameId: number;
   };
 }

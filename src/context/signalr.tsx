@@ -182,7 +182,6 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
       });
 
       connection.current.on('Burn', async (data) => {
-        console.log('shemovida', data);
         gameContext.dispatch({ type: 'SET_GAME', payload: null });
         winContext.setIsPlaying(true);
         turnContext.show({
@@ -198,26 +197,48 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
         hideLoader();
       });
 
-      connection.current.on('NewGame', (data) => {
+      connection.current.on('Win', async () => {
+        window.removeWinAnimation?.();
+        window.removeBurnAnimation?.();
+        window.removePlaceNextBetAnimation?.();
+        window.removeJackpotAnimation?.();
+        gameContext.dispatch({ type: 'SET_GAME', payload: null });
+        await placeNextBetContext.show(2.5);
+
+        hideLoader();
+      });
+
+      connection.current.on('NewGame', async (data) => {
         hideLoader();
         window.removeWinAnimation?.();
         window.removeBurnAnimation?.();
         window.removePlaceNextBetAnimation?.();
         window.removeJackpotAnimation?.();
 
-        turnContext.show({
-          duration: gamePlayedRef.current === 0 ? 0.01 : 1,
-          onFinish: () => {
-            winContext.show(
-              gameContext.state.defaultWinTime * 0.7,
-              formatFormula(data.formula),
-              data.potentialWin.toString(),
-            );
-          },
-        });
-
         gameContext.dispatch({ type: 'SET_GAME', payload: data });
         gameContext.dispatch({ type: 'UPDATE_GAME_PLAYED' });
+
+        if (gamePlayedRef.current > 0) {
+          turnContext.show({
+            duration: 1,
+            onFinish: () => {
+              winContext.show(
+                gameContext.state.defaultWinTime * 0.7,
+                formatFormula(data.formula),
+                data.potentialWin.toString(),
+              );
+            },
+          });
+        } else {
+          openContext.show({ duration: 2.5 });
+          await new Promise((resolve) => setTimeout(resolve, 2500));
+          turnContext.show({
+            duration: 1,
+            onFinish: () => {
+              winContext.show(2, formatFormula(data.formula), data.potentialWin.toString());
+            },
+          });
+        }
       });
 
       connection.current.on('JackpotWin', async (data) => {

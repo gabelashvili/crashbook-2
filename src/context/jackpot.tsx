@@ -96,7 +96,6 @@ const JackpotContextProvider = ({ children }: { children: ReactNode }) => {
       jackpotRightEntry.animationEnd = 6;
       jackpotRightEntry.listener = {
         complete: () => {
-          console.log('jackpotRightEntry complete', abortController.current?.signal.aborted);
           if (abortController.current?.signal.aborted) {
             removeJackpotAnimation();
             reject(new DOMException('Jackpot animation aborted', 'AbortError'));

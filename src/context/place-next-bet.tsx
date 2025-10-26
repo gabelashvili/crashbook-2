@@ -76,7 +76,6 @@ const PlaceNextBetContextProvider = ({ children }: { children: ReactNode }) => {
     }
     return new Promise((resolve) => {
       currentAbort.current = new AbortController();
-
       setIsPlaying(true);
       turnContext.show({
         duration: duration * 0.7,
