@@ -12,6 +12,7 @@ import { BurnContextProvider } from './context/burn.tsx';
 import { GameProvider } from './context/game.tsx';
 import { InfoModalProvider } from './context/info-modal.tsx';
 import { JackpotContextProvider } from './context/jackpot.tsx';
+import { PlaceNextBetContextProvider } from './context/place-next-bet.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -21,15 +22,17 @@ createRoot(document.getElementById('root')!).render(
           <JackpotContextProvider>
             <OpenContextProvider>
               <TurnContextProvider>
-                <FormulaContextProvider>
-                  <WinContextProvider>
-                    <BurnContextProvider>
-                      <SignalRProvider>
-                        <App />
-                      </SignalRProvider>
-                    </BurnContextProvider>
-                  </WinContextProvider>
-                </FormulaContextProvider>
+                <PlaceNextBetContextProvider>
+                  <FormulaContextProvider>
+                    <WinContextProvider>
+                      <BurnContextProvider>
+                        <SignalRProvider>
+                          <App />
+                        </SignalRProvider>
+                      </BurnContextProvider>
+                    </WinContextProvider>
+                  </FormulaContextProvider>
+                </PlaceNextBetContextProvider>
               </TurnContextProvider>
             </OpenContextProvider>
           </JackpotContextProvider>

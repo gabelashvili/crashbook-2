@@ -4,13 +4,13 @@ import * as PIXI from 'pixi.js';
 
 // Define the shape of your context
 type JackpotContextProps = {
-  show: (duration: number, amount: string) => void;
+  show: (duration: number, amount: string) => Promise<void>;
   initialDuration: number;
 };
 
 // Create the context with a default value (can be null)
 const JackpotContext = createContext<JackpotContextProps>({
-  show: () => {},
+  show: () => Promise.resolve(),
   initialDuration: 0,
 });
 
@@ -50,52 +50,53 @@ const JackpotContextProvider = ({ children }: { children: ReactNode }) => {
   const textSlot = jackpotLeft.skeleton.findSlot('120');
   textSlot!.color.a = 0;
 
-  const show = (duration: number, amount: string) => {
-    const start = performance.now();
-    jackpotLeft.removeChildren();
-    const rightAnimationDuration = duration * 0.25;
-    const leftAnimationDuration = duration - rightAnimationDuration;
+  const show = (duration: number, amount: string): Promise<void> => {
+    return new Promise((resolve) => {
+      jackpotLeft.removeChildren();
+      const rightAnimationDuration = duration * 0.25;
+      const leftAnimationDuration = duration - rightAnimationDuration;
 
-    const amountText = generateAmountText(amount);
-    jackpotLeft.addChild(amountText);
+      const amountText = generateAmountText(amount);
+      jackpotLeft.addChild(amountText);
 
-    const winTextBoxSlot = animationContext.spines.win?.skeleton.findSlot('text 01');
-    winTextBoxSlot!.color.a = 0;
+      const winTextBoxSlot = animationContext.spines.win?.skeleton.findSlot('text 01');
+      winTextBoxSlot!.color.a = 0;
 
-    jackpotLeft.visible = true;
-    jackpotRight.visible = true;
-    const jackpotLeftEntry = jackpotLeft.state.setAnimation(0, 'animation', false);
-    const jackpotRightEntry = jackpotRight.state.setAnimation(0, 'animation', false);
-    jackpotLeftEntry.timeScale = 0;
+      jackpotLeft.visible = true;
+      jackpotRight.visible = true;
+      const jackpotLeftEntry = jackpotLeft.state.setAnimation(0, 'animation', false);
+      const jackpotRightEntry = jackpotRight.state.setAnimation(0, 'animation', false);
+      jackpotLeftEntry.timeScale = 0;
 
-    jackpotRightEntry.timeScale = jackpotRightInitialDuration / rightAnimationDuration;
+      jackpotRightEntry.timeScale = jackpotRightInitialDuration / rightAnimationDuration;
 
-    jackpotRightEntry.animationStart = 3.5;
-    jackpotRightEntry.animationEnd = 6;
-    jackpotRightEntry.listener = {
-      complete: () => {
-        jackpotRight.state.clearTracks();
-        jackpotLeft.visible = true;
-        jackpotLeftEntry.timeScale = jackpotLeftInitialDuration / leftAnimationDuration;
+      jackpotRightEntry.animationStart = 3.5;
+      jackpotRightEntry.animationEnd = 6;
+      jackpotRightEntry.listener = {
+        complete: () => {
+          jackpotRight.state.clearTracks();
+          jackpotLeft.visible = true;
+          jackpotLeftEntry.timeScale = jackpotLeftInitialDuration / leftAnimationDuration;
 
-        tickerFnRef.current = () => {
-          const isSlotVisible = !!textSlot?.attachment?.name;
-          if (isSlotVisible) {
-            amountText.visible = true;
-          }
-        };
+          tickerFnRef.current = () => {
+            const isSlotVisible = !!textSlot?.attachment?.name;
+            if (isSlotVisible) {
+              amountText.visible = true;
+            }
+          };
 
-        animationContext.application!.ticker.add(tickerFnRef.current);
-      },
-    };
+          animationContext.application!.ticker.add(tickerFnRef.current);
+        },
+      };
 
-    jackpotLeftEntry.listener = {
-      complete: () => {
-        console.log(performance.now() - start);
-        jackpotLeft.state.clearTracks();
-        animationContext.application?.ticker.remove(tickerFnRef.current);
-      },
-    };
+      jackpotLeftEntry.listener = {
+        complete: () => {
+          resolve();
+          jackpotLeft.state.clearTracks();
+          animationContext.application?.ticker.remove(tickerFnRef.current);
+        },
+      };
+    });
   };
   return (
     <JackpotContext.Provider

@@ -12,6 +12,7 @@ import { formatFormula } from '../utils/formula';
 import type { MultiplierUpdate } from '../types/game';
 import { BurnContext } from './burn';
 import { JackpotContext } from './jackpot';
+import { PlaceNextBetContext } from './place-next-bet';
 
 export interface SignalRContextType {
   connection: TypedHubConnection | null;
@@ -38,6 +39,7 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
   const burnContext = use(BurnContext);
   const jackpotContext = use(JackpotContext);
   const infoModalContext = use(InfoModalContext);
+  const placeNextBetContext = use(PlaceNextBetContext);
   const [status, setStatus] = useState<'connecting' | 'connected' | 'reconnecting' | 'disconnected'>('connecting');
   const connection = useRef<TypedHubConnection | null>(null);
   const lastPageTurnTime = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -184,7 +186,8 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
           duration: gameContext.state.defaultWinTime * 0.3,
           onFinish: async () => {
             await winContext.show(gameContext.state.defaultWinTime * 0.5, formatFormula(data.formula || '1/2'), '0.00');
-            burnContext.show(gameContext.state.defaultBurnTime * 0.5);
+            await burnContext.show(gameContext.state.defaultBurnTime * 0.5);
+            await placeNextBetContext.show(2.5);
           },
         });
 
@@ -207,10 +210,12 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
         });
       });
 
-      connection.current.on('JackpotWin', (data) => {
+      connection.current.on('JackpotWin', async (data) => {
         hideLoader();
         gameContext.dispatch({ type: 'SET_GAME', payload: null });
-        jackpotContext.show(10, data.jackpot.toString());
+        await jackpotContext.show(10, data.jackpot.toString());
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await placeNextBetContext.show(2.5);
       });
 
       await connection.current.start();

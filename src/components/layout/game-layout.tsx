@@ -7,6 +7,7 @@ import { GameContext } from '../../context/game';
 import cn from '../../utils/cn';
 import { JackpotContext } from '../../context/jackpot';
 import { BurnContext } from '../../context/burn';
+import { PlaceNextBetContext } from '../../context/place-next-bet';
 
 const GameLayout = () => {
   const animationContext = useContext(AnimationContext);
@@ -16,7 +17,7 @@ const GameLayout = () => {
   const openContext = useContext(OpenContext);
   const jackpotContext = useContext(JackpotContext);
   const burnContext = useContext(BurnContext);
-
+  const placeNextBetContext = useContext(PlaceNextBetContext);
   return (
     <div className="grid grid-rows-[1fr_minmax(0,_min-content)]  py-6 max-w-2xl aspect-[1/1.7] max-h-[850px] w-full m-auto px-2">
       <div className="relative w-full h-full flex flex-col overflow-hidden bg-[#1B092469]/60">
@@ -36,8 +37,8 @@ const GameLayout = () => {
         <div
           id="flip-next"
           className={cn(
-            'w-full h-[50px] min-h-[50px] md:min-h-[70px] flex items-center justify-center',
-            !gameContext?.state.game ? 'opacity-60 pointer-events-none' : ' opacity-100',
+            'w-full h-[50px] min-h-[50px] md:min-h-[70px] flex items-center justify-center cursor-pointer',
+            !gameContext?.state.game ? 'opacity-60 pointer-events-none' : 'opacity-100',
           )}
           onClick={() => {
             setTimeout(() => {
@@ -78,6 +79,7 @@ const GameLayout = () => {
           burn
         </button>
         <button onClick={() => gameContext?.dispatch({ type: 'SET_GAME', payload: null })}>Reset game</button>
+        <button onClick={() => placeNextBetContext.show(1.5)}>Place next bet</button>
       </div>
     </div>
   );
