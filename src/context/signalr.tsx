@@ -197,6 +197,7 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
       connection.current.on('NewGame', (data) => {
         hideLoader();
         gameContext.dispatch({ type: 'SET_GAME', payload: data });
+        gameContext.dispatch({ type: 'UPDATE_GAME_PLAYED' });
 
         turnContext.show({
           duration: 0.01,
