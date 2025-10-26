@@ -22,6 +22,8 @@ export interface HubServerMethods {
   GetLeaderboard: void;
   CreateGame: {
     betAmount: number;
+    autoCashout?: number;
+    totalGames?: number;
   };
   TurnThePage: {
     gameId: number;

@@ -16,11 +16,22 @@ type State = {
   defaultWinTime: number;
   defaultBurnTime: number;
   defaultOpenTime: number;
+  autoPlayEventsTimes: {
+    turnTime: 2000;
+    nextGameDelay: 4000;
+    NextGameDelayOnBurn: 4000;
+  };
   betAmounts: number[];
   autoPlayOptions: {
     autoPlay: number;
-    autoCashout: number;
+    autoCashout: number | null;
   } | null;
+  autoPlayValues: number[];
+  autoCashoutValues: number[];
+  autoPlayInfo: {
+    currentGame: number;
+    totalGames: number;
+  };
 };
 
 // Action types as discriminated union
@@ -35,7 +46,7 @@ type Action =
   | { type: 'SET_BET_AMOUNT'; payload: State['betAmount'] }
   | { type: 'UPDATE_GAME_PLAYED' }
   | { type: 'SET_AUTO_PLAY_OPTIONS'; payload: State['autoPlayOptions'] }
-  | { type: 'UPDATE_AUTO_CASHOUT'; payload: number }
+  | { type: 'UPDATE_AUTO_CASHOUT'; payload: number | null }
   | { type: 'SET_MULTIPLE_FIELDS'; payload: Partial<State> };
 
 // Reducer using switch
@@ -85,6 +96,13 @@ const initialState: State = {
   defaultOpenTime: 2,
   betAmounts: [1, 2, 5, 25],
   autoPlayOptions: null,
+  autoPlayValues: [10, 20, 50, 100],
+  autoCashoutValues: [1.5, 2, 3],
+  autoPlayEventsTimes: {
+    turnTime: 1000,
+    nextGameDelay: 4000,
+    NextGameDelayOnBurn: 4000,
+  },
 };
 
 // Hook

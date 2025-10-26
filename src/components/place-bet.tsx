@@ -6,6 +6,7 @@ import Button from './ui/button';
 import cn from '../utils/cn';
 import { SignalRContext } from '../context/signalr';
 import LoadingIcon from './icons/loading';
+import AutoPlay from './auto-play';
 
 const PlaceBet = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -14,15 +15,33 @@ const PlaceBet = () => {
 
   const createGame = async () => {
     setIsLoading(true);
-    if (gameContext.state.gamePlayed === 0) {
-      signalRContext?.connection?.invoke('CreateGame', {
-        betAmount: gameContext.state.betAmount * 100,
-      });
-    } else {
-      signalRContext?.connection?.invoke('CreateGame', {
-        betAmount: gameContext.state.betAmount * 100,
-      });
+
+    let autoPlaySettings: Record<string, unknown> = {
+      ...(gameContext.state.autoPlayOptions?.autoPlay && { totalGames: gameContext.state.autoPlayOptions.autoPlay }),
+      ...(gameContext.state.autoPlayOptions?.autoCashout && {
+        autoCashout: gameContext.state.autoPlayOptions.autoCashout,
+      }),
+    };
+
+    if (Object.keys(autoPlaySettings).length > 0) {
+      autoPlaySettings = {
+        ...autoPlaySettings,
+        ...gameContext.state.autoPlayEventsTimes,
+      };
     }
+    console.log('autoPlaySettings', autoPlaySettings, {
+      betAmount: gameContext.state.betAmount * 100,
+      ...(Object.keys(autoPlaySettings).length > 0 && {
+        autoPlaySettings,
+      }),
+    });
+
+    signalRContext?.connection?.invoke('CreateGame', {
+      betAmount: gameContext.state.betAmount * 100,
+      ...(Object.keys(autoPlaySettings).length > 0 && {
+        autoPlaySettings,
+      }),
+    });
   };
 
   const cashout = async () => {
@@ -41,7 +60,7 @@ const PlaceBet = () => {
     <div className="bg-[linear-gradient(180deg,#7B5624_0%,#9C6D2E_32.69%,#B47E35_56.25%,#E19D42_100%)] rounded-sm p-[1px] h-fit">
       <div className="bg-[#200A2A] rounded-sm p-1">
         <div className="border border-[#F9CD7A] rounded-sm bg-[#541C73]">
-          <div>TOP</div>
+          <AutoPlay />
 
           <div className="bg-[linear-gradient(1.27deg,rgba(91,86,113,0)_22.64%,rgba(172,164,215,0.26)_101.7%)] rounded-sm p-0.5">
             <div className="bg-[#3B1252] rounded-md px-1.5 py-3 grid grid-cols-[1.3fr_130px] sm:grid-cols-[2.5fr_1fr] gap-2">
