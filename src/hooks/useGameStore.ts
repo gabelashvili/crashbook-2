@@ -17,6 +17,10 @@ type State = {
   defaultBurnTime: number;
   defaultOpenTime: number;
   betAmounts: number[];
+  autoPlayOptions: {
+    autoPlay: number;
+    autoCashout: number;
+  } | null;
 };
 
 // Action types as discriminated union
@@ -30,6 +34,8 @@ type Action =
   | { type: 'UPDATE_MULTIPLIER'; payload: MultiplierUpdate }
   | { type: 'SET_BET_AMOUNT'; payload: State['betAmount'] }
   | { type: 'UPDATE_GAME_PLAYED' }
+  | { type: 'SET_AUTO_PLAY_OPTIONS'; payload: State['autoPlayOptions'] }
+  | { type: 'UPDATE_AUTO_CASHOUT'; payload: number }
   | { type: 'SET_MULTIPLE_FIELDS'; payload: Partial<State> };
 
 // Reducer using switch
@@ -53,6 +59,12 @@ function reducer(state: State, action: Action): State {
       return { ...state, betAmount: action.payload };
     case 'UPDATE_GAME_PLAYED':
       return { ...state, gamePlayed: state.gamePlayed + 1 };
+    case 'SET_AUTO_PLAY_OPTIONS':
+      return { ...state, autoPlayOptions: action.payload };
+    case 'UPDATE_AUTO_CASHOUT':
+      return state.autoPlayOptions
+        ? { ...state, autoPlayOptions: { ...state.autoPlayOptions, autoCashout: action.payload } }
+        : state;
     case 'SET_MULTIPLE_FIELDS':
       return { ...state, ...action.payload };
   }
@@ -72,6 +84,7 @@ const initialState: State = {
   defaultBurnTime: 10,
   defaultOpenTime: 2,
   betAmounts: [1, 2, 5, 25],
+  autoPlayOptions: null,
 };
 
 // Hook
