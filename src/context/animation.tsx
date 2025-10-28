@@ -41,6 +41,10 @@ const gifsList = [
   'plus',
   'multiply',
   'equal',
+  'hiphen',
+  'x',
+  'y',
+  'z',
 ] as const;
 
 const AnimationContext = createContext<AnimationContextProps>({

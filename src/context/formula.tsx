@@ -19,7 +19,11 @@ export type FormulaKey =
   | 'minus'
   | 'plus'
   | 'multiply'
-  | 'equal';
+  | 'equal'
+  | 'hiphen'
+  | 'x'
+  | 'y'
+  | 'z';
 
 type ShowOptions = {
   durationSec?: number;
@@ -83,7 +87,6 @@ const FormulaContextProvider = ({ children }: { children: ReactNode }) => {
 
     const controller = new AbortController();
     abortControllerRef.current = controller;
-
     return new Promise<void>((resolve, reject) => {
       resolveRef.current = resolve;
       isPlayingRef.current = true;
@@ -96,12 +99,15 @@ const FormulaContextProvider = ({ children }: { children: ReactNode }) => {
 
       // Create new sprites
       formula.forEach((key) => {
-        const gif = PIXI.Assets.get(`gif-${key}`);
+        const gif = PIXI.Assets.get(`gif-${key.replace('^', '')}`);
         if (gif) {
           const sprite = new PIXI.AnimatedSprite(gif.textures);
           sprite.visible = false;
           sprite.gotoAndStop(0);
           sprites.current.push(sprite);
+          if (key.includes('^')) {
+            sprite.scale.set(0.4);
+          }
         }
       });
 
@@ -115,21 +121,35 @@ const FormulaContextProvider = ({ children }: { children: ReactNode }) => {
       const totalWidthRaw = sprites.current.reduce((acc, sprite) => acc + sprite.width + SPACE_BETWEEN_SPRITES, 0);
 
       const scale = Math.min(rect.width / totalWidthRaw, 0.6);
-      let prevX = 100 - (totalWidthRaw * scale <= rect.width ? (totalWidthRaw * scale - rect.width) / 2 : 0);
+      let prevX = 110 - (totalWidthRaw * scale <= rect.width ? (totalWidthRaw * scale - rect.width) / 2 : 0);
       let playIndex = 0;
 
       sprites.current.forEach((sprite, spriteIndex) => {
         sprite.scale.set(scale);
+        if (formula[spriteIndex].includes('^')) {
+          if (sprite.scale.x > scale) {
+            sprite.scale.set(sprite.scale.x * scale * 2.7);
+          } else {
+            sprite.scale.set(sprite.scale.x * scale);
+          }
+        }
 
         if (spriteIndex > 0) {
           const prevSprite = sprites.current[spriteIndex - 1];
           prevX += prevSprite.width + SPACE_BETWEEN_SPRITES * scale;
         }
-        sprite.x = prevX;
 
         let yPosition = -rect.height / 2 + 20;
-        if (formula[playIndex] === 'equal') yPosition += 25;
+        if (formula[spriteIndex] === 'equal') {
+          yPosition += sprite.height * 1.5;
+        }
+
+        if (formula[spriteIndex].includes('^')) {
+          prevX -= sprite.width - 10;
+          yPosition -= sprite.height * 0.2;
+        }
         sprite.y = yPosition;
+        sprite.x = prevX;
       });
 
       const playNext = () => {
