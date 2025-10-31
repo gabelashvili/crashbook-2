@@ -15,6 +15,10 @@ export interface HubEvents {
   NewGame: (data: Game) => void;
   JackpotWin: (data: { jackpot: number; totalWin: number }) => void;
   Win: (data: { multiplier: number; winAmount: number; gameHash: string; resultToken: string }) => void;
+  AutoPlayInfoUpdate: (data: { gameNumber: number; totalGames: number }) => void;
+  AutoplayStopInfo: () => void;
+  AutoplayFinished: () => void;
+  AutoplayStartInfo: (data: { totalGames: number; autoCashout: number | null; gameNumber: number }) => void;
 }
 
 export interface HubServerMethods {
@@ -31,6 +35,7 @@ export interface HubServerMethods {
   Cashout: {
     gameId: number;
   };
+  CancelAutoplay: void;
 }
 
 export type TypedHubConnection = Omit<HubConnection, 'on' | 'off' | 'invoke'> & {

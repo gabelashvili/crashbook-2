@@ -3,6 +3,8 @@ import { Switch } from './ui/switch';
 import { GameContext } from '../context/game';
 import cn from '../utils/cn';
 
+const AUTO_PLAY_VALUES = [2, 20, 50, 100];
+
 const AutoPlay = () => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -52,7 +54,7 @@ const AutoPlay = () => {
           }}
         >
           <ul className="space-y-3.5">
-            {[10, 20, 50, 100].map((value) => (
+            {[2, 20, 50, 100].map((value) => (
               <li
                 onClick={() => {
                   if (gameContext?.state.autoPlayOptions?.autoPlay === value) {
@@ -63,7 +65,7 @@ const AutoPlay = () => {
                   } else {
                     gameContext?.dispatch({
                       type: 'SET_AUTO_PLAY_OPTIONS',
-                      payload: { autoPlay: value, autoCashout: null },
+                      payload: { autoPlay: value, autoCashout: null, currentGame: 0 },
                     });
                   }
                 }}
@@ -99,23 +101,23 @@ const AutoPlay = () => {
             } else {
               gameContext?.dispatch({
                 type: 'UPDATE_AUTO_CASHOUT',
-                payload: gameContext!.state.autoCashoutValues[0],
+                payload: AUTO_PLAY_VALUES[0],
               });
             }
           }}
         />
         <div className="flex gap-1 sm:gap-2">
-          {gameContext?.state.autoCashoutValues.map((value) => (
+          {[1.5, 2, 3].map((value) => (
             <div
               key={value}
               className={cn(
                 'w-7 h-7 min-w-7 min-h-7 sm:w-8 sm:h-8 sm:min-w-8 sm:min-h-8 user-select-none shadow-[inset_0_4px_4px_0_#0000004D] cursor-pointer bg-[#2A1244] border border-[#582FB6] rounded-sm p-1.5 flex items-center justify-center text-xs sm:text-sm text-[#ACACAC] md:text-base font-semibold',
                 {
-                  'bg-[#814FFC] text-white': gameContext.state.autoPlayOptions?.autoCashout === value,
+                  'bg-[#814FFC] text-white': gameContext?.state.autoPlayOptions?.autoCashout === value,
                 },
               )}
               onClick={() => {
-                gameContext.dispatch({ type: 'UPDATE_AUTO_CASHOUT', payload: value });
+                gameContext?.dispatch({ type: 'UPDATE_AUTO_CASHOUT', payload: value });
               }}
             >
               {value}

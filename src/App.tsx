@@ -16,7 +16,7 @@ function App() {
   }
   return (
     <>
-      <div className="w-full grid grid-rows-[minmax(1fr,_max-content)_1fr] h-dvh">
+      <div className="w-full grid grid-rows-[minmax(0,_max-content)_1fr] h-dvh">
         <Header />
         <GameLayout />
       </div>

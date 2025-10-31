@@ -25,12 +25,7 @@ type State = {
   autoPlayOptions: {
     autoPlay: number;
     autoCashout: number | null;
-  } | null;
-  autoPlayValues: number[];
-  autoCashoutValues: number[];
-  autoPlayInfo: {
-    currentGame: number;
-    totalGames: number;
+    currentGame: number | null;
   } | null;
 };
 
@@ -96,14 +91,11 @@ const initialState: State = {
   defaultOpenTime: 2,
   betAmounts: [1, 2, 5, 25],
   autoPlayOptions: null,
-  autoPlayValues: [10, 20, 50, 100],
-  autoCashoutValues: [1.5, 2, 3],
   autoPlayEventsTimes: {
     turnTime: 1000,
     nextGameDelay: 4000,
     NextGameDelayOnBurn: 4000,
   },
-  autoPlayInfo: null,
 };
 
 // Hook
