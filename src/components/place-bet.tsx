@@ -37,8 +37,10 @@ const PlaceBet = () => {
       }),
     });
 
-    openContext.show({ duration: 2.5 });
-    await new Promise((resolve) => setTimeout(resolve, 2500));
+    if (gameContext.state.gamePlayed === 0) {
+      openContext.show({ duration: 2.5 });
+      await new Promise((resolve) => setTimeout(resolve, 2500));
+    }
 
     signalRContext?.connection?.invoke('CreateGame', {
       betAmount: gameContext.state.betAmount * 100,
