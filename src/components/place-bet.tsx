@@ -7,12 +7,13 @@ import cn from '../utils/cn';
 import { SignalRContext } from '../context/signalr';
 import LoadingIcon from './icons/loading';
 import AutoPlay from './auto-play';
+import { OpenContext } from '../context/open';
 
 const PlaceBet = () => {
   const [isLoading, setIsLoading] = useState(false);
   const gameContext = use(GameContext)!;
   const signalRContext = use(SignalRContext);
-
+  const openContext = use(OpenContext);
   const createGame = async () => {
     setIsLoading(true);
 
@@ -36,6 +37,9 @@ const PlaceBet = () => {
       }),
     });
 
+    openContext.show({ duration: 2.5 });
+    await new Promise((resolve) => setTimeout(resolve, 2500));
+
     signalRContext?.connection?.invoke('CreateGame', {
       betAmount: gameContext.state.betAmount * 100,
       ...(Object.keys(autoPlaySettings).length > 0 && {
@@ -51,10 +55,8 @@ const PlaceBet = () => {
   };
 
   useEffect(() => {
-    if (isLoading) {
-      setIsLoading(false);
-    }
-  }, [gameContext.state.gamePlayed, isLoading]);
+    setIsLoading(false);
+  }, [gameContext.state.gamePlayed]);
 
   return (
     <div className="bg-[linear-gradient(180deg,#7B5624_0%,#9C6D2E_32.69%,#B47E35_56.25%,#E19D42_100%)] rounded-sm p-[1px] h-fit">

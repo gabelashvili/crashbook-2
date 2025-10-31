@@ -230,8 +230,6 @@ const SignalRProvider: React.FC<SignalRProviderProps> = ({ children }) => {
             },
           });
         } else {
-          openContext.show({ duration: 2.5 });
-          await new Promise((resolve) => setTimeout(resolve, 2500));
           turnContext.show({
             duration: 0.001,
             onFinish: () => {
